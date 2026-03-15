@@ -26,14 +26,14 @@ public class Message implements Serializable{
         //will have Filters object payload
         search_games,    // Player  -> Master
 
-        //will have BetAmount object payload
+        //will have ArrayList<Game> object payload
+        search_results,  // Reducer -> Master / Master -> Player
+
+        //will have Bet object payload
         play_bet,        // Player  -> Master -> Worker
 
         //will have
         request_random,  // Worker  -> RNG
-
-        //will have ArrayList<Game> object payload
-        search_results,  // Reducer -> Master / Master -> Player
 
         send_map_data,   // Worker  -> Reducer
 
