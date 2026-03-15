@@ -64,4 +64,8 @@ public class Message implements Serializable{
     public action getMessageAction() {
         return message_action;
     }
+
+    public Object getPayload(){
+        return payload;
+    }
 }
