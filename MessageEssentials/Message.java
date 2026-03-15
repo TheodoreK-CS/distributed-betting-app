@@ -17,32 +17,36 @@ public class Message implements Serializable{
     public enum action {
         //these are also all final variables
 
-        //will have Game object payload
+        //will have Game object payload(see Game class)
         add_game,        // Manager -> Master
 
-        //will have Game object payload
+        //will have Game object payload(see Game class)
         remove_game,     // Manager -> Master
 
-        //will have Filters object payload
+        //will have Filters object payload(see Filters class)
         search_games,    // Player  -> Master
 
         //will have ArrayList<Game> object payload
         search_results,  // Reducer -> Master / Master -> Player
 
-        //will have Bet object payload
+        //will have Bet object payload(see Bet class)
         play_bet,        // Player  -> Master -> Worker
 
-        //will have
+        //doesn't need payload only the action
         request_random,  // Worker  -> RNG
+
 
         send_map_data,   // Worker  -> Reducer
 
         change_game, 
         
+        //will have Filters object payload(see Filters class) with constructor that only has provider name as the id variable
         game_profit,
 
+        //will have Filters object payload(see Filters class) with constructor that only has player id as the id variable
         player_profit,
 
+        
         review_game,
     }
 
@@ -53,11 +57,20 @@ public class Message implements Serializable{
     //the payload can take the form of anything we want to send
     private Object payload;
 
+    //message with payload
     public Message(sender message_sender, action message_action, Object payload){
 
         this.message_sender = message_sender;
         this.message_action = message_action;
         this.payload = payload;
+
+    }
+
+    //message without payload for simple commands that don't need payload(example: request_random, )
+    public Message(sender message_sender, action message_action){
+
+        this.message_sender = message_sender;
+        this.message_action = message_action;
 
     }
 

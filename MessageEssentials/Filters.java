@@ -6,7 +6,8 @@ public class Filters implements Serializable{
     //custom object id so transfer doesn't crash because of small changes in the Filters class
     private static final long serialVersionUID = 1L;
 
-    private String playerID;
+    //used as player id for filter search and gain/loss search based on player or used as provider name for gain/loss search based on manager
+    private String id;
 
     //the three types of filters
 
@@ -21,17 +22,22 @@ public class Filters implements Serializable{
 
     private String category;
 
-    Filters(String playerID, int stars, String minBet, String riskLevel, String category){
-        this.playerID = playerID;
+    Filters(String id, int stars, String minBet, String riskLevel, String category){
+        this.id = id;
         this.stars = stars;
         this.minBet = minBet;
         this.riskLevel = riskLevel;
 
     }
 
+    //for gain/loss manager search based on playerID or provider name
+    Filters(String id){
+        this.id = id;
+    }
+
     //getters
-    public String getPlayerID(){
-        return playerID;
+    public String getID(){
+        return id;
     }
 
     public int getStars(){
