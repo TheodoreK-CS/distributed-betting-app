@@ -55,4 +55,8 @@ public class Filters implements Serializable{
     public String getCategory(){
         return category;
     }
+
+    public void gojo(){
+        
+    }
 }
