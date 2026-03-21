@@ -7,11 +7,7 @@ public class Message implements Serializable{
     //custom object id so transfer doesn't crash because of small changes in the Message class
     private static final long serialVersionUID = 1L;
 
-    //who is sending the message
-    public enum sender {
-        //these are all final variables
-        manager, player, master, worker, reducer, rng
-    }
+
 
     //what is the message carrying?
     public enum action {
@@ -35,10 +31,12 @@ public class Message implements Serializable{
         //doesn't need payload only the action
         request_random,  // Worker  -> RNG
 
+        //will have RandomResult object payload(see RandomResult class)
+        random_result,
 
         send_map_data,   // Worker  -> Reducer
 
-        change_game, 
+        change_game,
         
         //will have Filters object payload(see Filters class) with constructor that only has provider name as the id variable
         game_profit,
@@ -51,25 +49,23 @@ public class Message implements Serializable{
     }
 
     //these values must be from the list of senders and actions
-    private sender message_sender;
+
     private action message_action;
 
     //the payload can take the form of anything we want to send
     private Object payload;
 
     //message with payload
-    public Message(sender message_sender, action message_action, Object payload){
+    public Message(action message_action, Object payload){
 
-        this.message_sender = message_sender;
         this.message_action = message_action;
         this.payload = payload;
 
     }
 
     //message without payload for simple commands that don't need payload(example: request_random, )
-    public Message(sender message_sender, action message_action){
+    public Message(action message_action){
 
-        this.message_sender = message_sender;
         this.message_action = message_action;
 
     }

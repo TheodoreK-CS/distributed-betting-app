@@ -56,7 +56,5 @@ public class Filters implements Serializable{
         return category;
     }
 
-    public void gojo(){
-        
-    }
+
 }
