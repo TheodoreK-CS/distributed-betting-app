@@ -8,7 +8,7 @@ public class Game implements Serializable{
 
     private String gameName;
     private String providerName;
-    private int stars;
+    private double stars;
     private int noOfVotes;
     private String gameLogoPath;
     private double minBet;
@@ -17,11 +17,11 @@ public class Game implements Serializable{
 
     private String betCategory;
     private int jackpot;
-
+    private Boolean is_Active = true;
     //for rng safety
     private String safetyNumber;
 
-    Game(String gameName, String providerName, int stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
+    Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
         this.gameName = gameName;
         this.providerName = providerName;
         this.stars = stars;
@@ -74,6 +74,12 @@ public class Game implements Serializable{
         return 0;
     }
 
+    public void game_review(double star){
+
+        noOfVotes++;
+        stars = (stars*(noOfVotes-1)+star)/noOfVotes;
+    }
+
     //getters
     public String getGameName(){
         return gameName;
@@ -81,7 +87,7 @@ public class Game implements Serializable{
     public String getProviderName(){
         return providerName;
     }
-    public int getStars(){
+    public double getStars(){
         return stars;
     }
     public int getNoOfVotes(){
@@ -108,6 +114,10 @@ public class Game implements Serializable{
     public int getJackpot(){
         return jackpot;
     }
+    public boolean ifActive(){
+        return is_Active;
+    }
+
 
     // setters
 
@@ -119,7 +129,7 @@ public class Game implements Serializable{
         this.providerName = providerName;
     }
 
-    public void setStars(int stars){
+    public void setStars(double stars){
         this.stars = stars;
     }
 
@@ -147,6 +157,9 @@ public class Game implements Serializable{
 
     public void setSafetyNumber(String safetyNumber){
         this.safetyNumber = safetyNumber;
+    }
+    public void setActive(boolean is_Active){
+        this.is_Active = is_Active;
     }
 
 }
