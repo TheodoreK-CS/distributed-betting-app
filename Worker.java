@@ -6,17 +6,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import MessageEssentials.Game;
 import MessageEssentials.Message;
 import java.lang.Runnable;
 
 class Worker{
 
     private ServerSocket WorkerSocket;
-    
+    private ArrayList<Game> game_list = new ArrayList<>();
 
 
     public Worker(int port) throws IOException{  
         WorkerSocketSocket = new ServerSocket(port);
+
     }
 
     public void main(String args[]){
@@ -58,19 +62,27 @@ class Worker{
 
         public requestHandler(Socket socket1){
             this.socket = socket1;
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            
         }
+
 
         public void run(){
             try {
                 Message obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
-                    
+                    game_list.add(obj.get_game());
                 }
                 else if(command == Message.action.remove_game){
-
+                    for(Game g:game_list){
+                        if(obj.get_name().equals(g.getGameName())){
+                            g.setActive(false);
+                            break;
+                        }
+                        
+                    }
                 }
                 else if(command == Message.action.search_games){
 
@@ -88,7 +100,12 @@ class Worker{
 
                 }
                 else if(command == Message.action.review_game){
-
+                    for(Game g:game_list){
+                        if(obj.get_name().equals(g.getGameName())){
+                            g.game_review(obj.getStar());
+                            break;
+                        }
+                    }
                 }
             }
             catch (IOException e) {

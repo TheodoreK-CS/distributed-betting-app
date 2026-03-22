@@ -3,25 +3,32 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+
 import MessageEssentials.Message;
 import java.lang.Runnable;
 
 class Master{
 
     private ServerSocket MasterSocket;
-    
+    private ArrayList<Integer> workerPorts = new ArrayList<>();
 
 
-    public Master(int port) throws IOException{  
+    public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
         MasterSocket = new ServerSocket(port);
+        this.workerPorts = worker_ports;
     }
 
     public void main(String args[]){
         try{
-            
+            ArrayList<Integer> worker_ports = new ArrayList<Integer>(); 
+            for (int i = 1; i < args.length; i++){
+                worker_ports.add(Integer.parseInt(args[i]));
+            }
             int port = Integer.parseInt(args[0]);
-            Master master = new Master(port);
+            Master master = new Master(port,worker_ports);
             master.begin();
+
 
         }
         catch(IOException e){
@@ -56,27 +63,71 @@ class Master{
 
         public requestHandler(Socket socket1){
             this.socket = socket1;
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            
+        }
+
+        
+
+        public Message communicate(int temp){
+
+            Message response = new Message();
+            try{
+                Socket worker = new Socket("localhost",workerPorts.get(temp));
+
+                ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
+                ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());
+
+                workerOut.writeObject(obj);
+                workerOut.flush();
+
+                response = (Message) workerIn.readObject();
+
+                workerIn.close();
+                workerOut.close();
+                worker.close();
+            
+            } 
+            catch (IOException e) {
+
+            }
+            catch (ClassNotFoundException e) {
+
+            }
+            return response;
         }
 
         public void run(){
+            Message response;
             try {
                 obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
-                    
+                    int hash = obj.getName().hashCode();
+                    int temp = Math.abs(hash % workerPorts.size());
+                    response = communicate(temp);
+
                 }
                 else if(command == Message.action.remove_game){
+                    int hash = obj.getName().hashCode();
+                    int temp = Math.abs(hash % workerPorts.size());
+                    response = communicate(temp);
 
                 }
                 else if(command == Message.action.search_games){
-
+                    
                 }
                 else if(command == Message.action.play_bet){
+                    int hash = obj.getName().hashCode();
+                    int temp = Math.abs(hash % workerPorts.size());
+                    response = communicate(temp);
 
                 }
                 else if(command == Message.action.change_game){
+                    int hash = obj.getName().hashCode();
+                    int temp = Math.abs(hash % workerPorts.size());
+                    response = communicate(temp);
 
                 }
                 else if(command == Message.action.game_profit){
@@ -86,7 +137,9 @@ class Master{
 
                 }
                 else if(command == Message.action.review_game){
-
+                    int hash = obj.getName().hashCode();
+                    int temp = Math.abs(hash % workerPorts.size());
+                    response = communicate(temp);
                 }
                 
             }
