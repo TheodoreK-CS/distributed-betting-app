@@ -16,23 +16,23 @@ class Worker{
 
     private ServerSocket WorkerSocket;
     private ArrayList<Game> game_list = new ArrayList<>();
+    private int reducerPort ;
 
-
-    public Worker(int port) throws IOException{  
+    public Worker(int port, int reducer_ports) throws IOException{  
         WorkerSocketSocket = new ServerSocket(port);
-
+        this.reducerPort = reducer_ports;
     }
 
     public void main(String args[]){
         try{
-            
+            int reducer_port = Integer.parseInt(args[1]);
             int port = Integer.parseInt(args[0]);
-            Worker worker = new Worker(port);
+            Worker worker = new Worker(port,reducer_port);
             worker.begin();
 
         }
         catch(IOException e){
-            return;
+            return ;
         }
 
     }
@@ -67,6 +67,29 @@ class Worker{
             
         }
 
+    public Message communicate(){
+
+        //Message responce = new Message();
+        try{
+            Socket = new Socket("localhost",reducerPort);
+            ObjectOutputStream reducerOut = new ObjectOutputStream(reducer.getOutputStream());
+            ObjectInputStream reducerIn = new ObjectInputStream(reducer.getInputStream());
+
+            reducerOut.writeObject(obj);
+            reducerOut.flush();
+
+            reducerIn.close();
+            reducerOut.close();
+            reducer.close();
+        }
+        catch (IOException e) {
+
+        }
+        catch (ClassNotFoundException e) {
+
+        }
+
+    }
 
         public void run(){
             try {

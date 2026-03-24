@@ -12,6 +12,7 @@ class Master{
 
     private ServerSocket MasterSocket;
     private ArrayList<Integer> workerPorts = new ArrayList<>();
+    
 
 
     public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
@@ -98,6 +99,30 @@ class Master{
             return response;
         }
 
+        public void communicate_all(){
+
+
+            try{
+                for(Integer i:workerPorts){
+                    Socket worker = new Socket("localhost",i);
+                    ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
+                    ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());
+
+                    workerOut.writeObject(obj);
+                    workerOut.flush();
+
+                    workerIn.close();
+                    workerOut.close();
+                    worker.close();
+                }
+            }
+            catch (IOException e) {
+
+            }
+
+           
+        } 
+
         public void run(){
             Message response;
             try {
@@ -116,7 +141,7 @@ class Master{
 
                 }
                 else if(command == Message.action.search_games){
-                    
+                    communicate_all();
                 }
                 else if(command == Message.action.play_bet){
                     int hash = obj.getName().hashCode();
@@ -131,10 +156,10 @@ class Master{
 
                 }
                 else if(command == Message.action.game_profit){
-
+                    communicate_all();
                 }
                 else if(command == Message.action.player_profit){
-
+                    communicate_all();
                 }
                 else if(command == Message.action.review_game){
                     int hash = obj.getName().hashCode();
@@ -154,31 +179,5 @@ class Master{
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
