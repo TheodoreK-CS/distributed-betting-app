@@ -6,7 +6,7 @@ public class Message implements Serializable{
 
     //custom object id so transfer doesn't crash because of small changes in the Message class
     private static final long serialVersionUID = 1L;
-
+    private int id_pairing;
 
 
     //what is the message carrying?
@@ -76,5 +76,13 @@ public class Message implements Serializable{
 
     public Object getPayload(){
         return payload;
+    }
+
+    public int get_id(){
+        return id_pairing;
+    }
+
+    public void set_id(int id){
+        this.id_pairing = id;
     }
 }

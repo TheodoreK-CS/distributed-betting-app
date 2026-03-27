@@ -58,33 +58,38 @@ class Reducer{
         private ObjectOutputStream out;
 
         public requestHandler(Socket socket1){
-            this.socket = socket1;
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            
+            try{
+                this.socket = socket1;
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+            }
+            catch(IOException e){
+
+            }
         }
-    }
-    public void run(){
-            try {
-                Message obj = (Message) in.readObject();
-                Message.action command = obj.getMessageAction();
-                if (command == Message.action.search_games){
+    
+        public void run(){
+                try {
+                    Message obj = (Message) in.readObject();
+                    Message.action command = obj.getMessageAction();
+                    if (command == Message.action.search_games){
+
+                    }
+                    else if(command == Message.action.game_profit){
+
+                    }
+                    else if(command == Message.action.player_profit){
+
+                    }
 
                 }
-                else if(command == Message.action.game_profit){
+                catch (IOException e) {
 
                 }
-                else if(command == Message.action.player_profit){
+                catch (ClassNotFoundException e) {
 
                 }
-
-            }
-            catch (IOException e) {
-
-            }
-            catch (ClassNotFoundException e) {
-
-            }
+        }
     }
 
 

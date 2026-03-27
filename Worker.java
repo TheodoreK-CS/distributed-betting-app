@@ -59,19 +59,24 @@ class Worker{
         private Socket socket;
         private ObjectInputStream in;
         private ObjectOutputStream out;
+        private Message obj;
 
         public requestHandler(Socket socket1){
-            this.socket = socket1;
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            
+            try{
+                this.socket = socket1;
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+            }
+            catch(IOException e){
+
+            }
         }
 
-    public Message communicate(){
+    public void communicate(){
 
         //Message responce = new Message();
         try{
-            Socket = new Socket("localhost",reducerPort);
+            Socket reducer = new Socket("localhost",reducerPort);
             ObjectOutputStream reducerOut = new ObjectOutputStream(reducer.getOutputStream());
             ObjectInputStream reducerIn = new ObjectInputStream(reducer.getInputStream());
 
@@ -85,9 +90,7 @@ class Worker{
         catch (IOException e) {
 
         }
-        catch (ClassNotFoundException e) {
 
-        }
 
     }
 

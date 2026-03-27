@@ -2,6 +2,8 @@ import java.net.Socket;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import MessageEssentials.Message;
+
 
 public class DummyClient{
     private Scanner scanner;
@@ -96,9 +98,6 @@ public class DummyClient{
     } 
             
     }
-
-
-
 
     public void review(){
 

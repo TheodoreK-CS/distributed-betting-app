@@ -4,6 +4,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import MessageEssentials.Message;
 import java.lang.Runnable;
@@ -12,7 +14,8 @@ class Master{
 
     private ServerSocket MasterSocket;
     private ArrayList<Integer> workerPorts = new ArrayList<>();
-    
+    private Map<Integer, Socket> id = new HashMap<>();
+    private int count = 0;
 
 
     public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
@@ -63,10 +66,16 @@ class Master{
         private Message obj;
 
         public requestHandler(Socket socket1){
-            this.socket = socket1;
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            
+            try{
+                this.socket = socket1;
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+
+
+            }
+            catch(IOException e){
+
+            }
         }
 
         
@@ -104,6 +113,10 @@ class Master{
 
             try{
                 for(Integer i:workerPorts){
+                    
+                    obj.set_id(count);
+                    id.put(count, socket);
+                    count ++;
                     Socket worker = new Socket("localhost",i);
                     ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
                     ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());
