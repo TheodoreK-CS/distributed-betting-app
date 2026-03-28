@@ -23,7 +23,7 @@ class Master{
         this.workerPorts = worker_ports;
     }
 
-    public void main(String args[]){
+    public static void main(String args[]){
         try{
             ArrayList<Integer> worker_ports = new ArrayList<Integer>(); 
             for (int i = 1; i < args.length; i++){
@@ -83,7 +83,7 @@ class Master{
 
         public Message communicate(int temp){
 
-            Message response = new Message();
+            Message response = new Message(Message.action.empty);
             try{
                 Socket worker = new Socket("localhost",workerPorts.get(temp));
 
@@ -143,13 +143,13 @@ class Master{
                 obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
-                    int hash = obj.getName().hashCode();
+                    int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
 
                 }
                 else if(command == Message.action.remove_game){
-                    int hash = obj.getName().hashCode();
+                    int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
 
@@ -158,13 +158,13 @@ class Master{
                     communicate_all();
                 }
                 else if(command == Message.action.play_bet){
-                    int hash = obj.getName().hashCode();
+                    int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
 
                 }
                 else if(command == Message.action.change_game){
-                    int hash = obj.getName().hashCode();
+                    int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
 
@@ -176,7 +176,7 @@ class Master{
                     communicate_all();
                 }
                 else if(command == Message.action.review_game){
-                    int hash = obj.getName().hashCode();
+                    int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
                 }

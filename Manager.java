@@ -2,7 +2,7 @@ import java.net.Socket;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-import MessageEssentials.Message;
+import MessageEssentials.*;
 
 public class Manager {
     private Scanner scanner;
@@ -100,7 +100,7 @@ public class Manager {
         
 
         Message req = new Message(Message.action.add_game);
-        req.add_game(game);
+        req.add_Game(game);
         Message resp = communicate(req);
         System.out.println(resp.getContext());
 
@@ -127,9 +127,11 @@ public class Manager {
         String gameName = scanner.nextLine();
 
         System.out.println("Set new MinBet");
-        String minBet = scanner.nextLine();
+        double minBet = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Set new MaxBet");
-        String maxBet = scanner.nextLine();
+        double maxBet = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Set new Risk Level (low,medium,high)");
         String risk = scanner.nextLine();
 
@@ -138,7 +140,7 @@ public class Manager {
 
         Message req = new Message(Message.action.change_game);
         req.addGameName(gameName);
-        req.addPayload(minBet,maxBet,risk);
+        req.add_payload(minBet,maxBet,risk);
         Message resp = communicate(req);
         System.out.println(resp.getContext());
 

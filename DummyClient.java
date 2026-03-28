@@ -109,7 +109,7 @@ public class DummyClient{
         
         Message req = new Message(Message.action.review_game,PlayerID);
 
-        req.setGameName(GameName);
+        req.addGameName(GameName);
         req.setStars(rating);
 
         Message resp = communicate(req);
@@ -170,7 +170,7 @@ public class DummyClient{
         }
 
         
-        Message req = new Message(Message.action.search,PlayerID);
+        Message req = new Message(Message.action.search_games,PlayerID);
 
         req.add_payload(providers,lowstars,highstars,risk,betCategory);
 
@@ -235,7 +235,7 @@ public class DummyClient{
 
         Message req = new Message(Message.action.search_games,PlayerID);
         ArrayList<String> providers = new ArrayList<>();
-        providers.add("all")
+        providers.add("all");
         req.add_payload(providers,0,5,"all","all");
 
         Message resp = communicate(req);
@@ -245,7 +245,7 @@ public class DummyClient{
 
     public Message communicate(Message obj){
 
-        Message res=new Message();
+        Message res=new Message(Message.action.empty);
 
         try{
             master=new Socket("localhost",master_port);

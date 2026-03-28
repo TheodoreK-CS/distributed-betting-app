@@ -20,7 +20,7 @@ class Worker{
         this.reducerPort = reducer_ports;
     }
 
-    public void main(String args[]){
+    public static void main(String args[]){
         try{
             int reducer_port = Integer.parseInt(args[1]);
             int port = Integer.parseInt(args[0]);
