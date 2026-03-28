@@ -121,7 +121,7 @@ public class DummyClient{
 
         //Category -----
         String category = "all";
-        System.out.println("Please input game category");
+        System.out.println("Please input game provider");
         category = scanner.nextLine();
 
         //Stars -----
@@ -136,24 +136,24 @@ public class DummyClient{
         }
 
         //Risk -----
-        String risk = "";
-        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")){
-            System.out.println("Please choose your risk (low,medium,high): ");
+        String risk = "all";
+        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high") && !risk.equals("all"){
+            System.out.println("Please choose your risk (low,medium,high,all): ");
             risk = scanner.nextLine();
 
-            if(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")){
+            if(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")&& !risk.equals("all")){
                 System.out.println("False risk choice");
             }
         }
         
 
         //Bet Category -----
-        String betCategory = "";
-        while(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")){
-            System.out.println("Please choose a bet category ($, $$, $$$): ");
+        String betCategory = "all";
+        while(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")&& !betCategory.equals("all")){
+            System.out.println("Please choose a bet category ($, $$, $$$, all): ");
             betCategory = scanner.nextLine();
 
-            if(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")){
+            if(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")&& !betCategory.equals("all")){
                 System.out.println("Wrong bet category choice");
             }
         }
