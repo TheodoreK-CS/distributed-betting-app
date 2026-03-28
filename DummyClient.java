@@ -107,7 +107,7 @@ public class DummyClient{
         String rating = scanner.nextLine();
 
         
-        Message req = new Message(Message.Action.review_game,PlayerID);
+        Message req = new Message(Message.action.review_game,PlayerID);
 
         req.add_payload(GameName,rating);
 
@@ -159,7 +159,7 @@ public class DummyClient{
         }
 
         
-        Message req = new Message(Message.Action.search,PlayerID);
+        Message req = new Message(Message.action.search,PlayerID);
 
         req.add_payload(category,lowstars,highstars,risk,betCategory);
 
@@ -188,7 +188,7 @@ public class DummyClient{
             scanner.nextLine();
         }
 
-        Message req = new Message(Message.Action.play_bet,PlayerID);
+        Message req = new Message(Message.action.play_bet,PlayerID);
 
         req.add_payload(GameName, BetAmount);
 
@@ -222,7 +222,7 @@ public class DummyClient{
 
         System.out.println("\n");
 
-        Message req = new Message(Message.Action.search_games,PlayerID);
+        Message req = new Message(Message.action.search_games,PlayerID);
 
         req.add_payload("all",0,5,"all","all");
 
