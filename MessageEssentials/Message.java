@@ -12,7 +12,7 @@ public class Message implements Serializable{
     private String playerId;
     private String gameName, Risk, Category;
     private Game game;
-    private double stars,LowStars,HighStars;
+    private double stars,LowStars,HighStars,betAmount;
     private String context;
     private ArrayList<Game> games = new ArrayList<>();
     private ArrayList<String> Providers = new ArrayList<>();
@@ -126,13 +126,39 @@ public class Message implements Serializable{
     }
 
     public void setSearchedGames(ArrayList<Game> games){
-        this games=games;
+        this.games=games;
     }
     public ArrayList<Game> getSearchedGames(){
         return games;
     }
     public ArrayList<String> getProviders(){
         return Providers;
+    }
+    public Double getLowStars(){
+        return LowStars;
+    }
+    public Double getHighStars(){
+        return HighStars;
+    }
+    public String getRisk(){
+        return Risk;
+    }
+    public String getCategory(){
+        return Category;
+    }
+    public void add_payload(ArrayList<String> Providers, double lowstars, double highstars,String risk,String Category){
+        this.Providers=Providers;
+        this.LowStars=lowstars;
+        this.HighStars=highstars;
+        this.Risk=risk;
+        this.Category=Category;
+    }
+    public void add_payload(String gameName, double betAmount){
+        this.GameName=GameName;
+        this.betAmount=betAmount;
+    }
+    public void add_payload(){
+
     }
 
 }

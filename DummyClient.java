@@ -104,14 +104,17 @@ public class DummyClient{
         System.out.println("Give store name.");
         String GameName = scanner.nextLine();
         System.out.println("Give rating.");
-        String rating = scanner.nextLine();
+        double rating = scanner.nextDouble();
 
         
         Message req = new Message(Message.action.review_game,PlayerID);
 
-        req.add_payload(GameName,rating);
+        req.setGameName(GameName);
+        req.setStars(rating);
 
         Message resp = communicate(req);
+
+        System.out.println(resp.getContext());
 
     }
 
@@ -120,18 +123,26 @@ public class DummyClient{
     public void search(){
 
         //Category -----
-        String category = "all";
-        System.out.println("Please input game provider");
-        category = scanner.nextLine();
-
+        ArrayList<String> providers = new ArrayList<>();
+        while(true){
+            System.out.println("Please input game provider or type '0' to procceed.");
+            String temp = scanner.nextLine();
+            if (temp.equals("0")){
+                break;
+            }
+            providers.add(temp);
+        }
+        if (providers.size()==0){
+            providers.add("all");
+        }
         //Stars -----
-        int lowstars = -1;
-        int highstars = 6;
+        double lowstars = -1;
+        double highstars = 6;
         while(lowstars<0 || highstars>5 || lowstars > highstars){
             System.out.println("Please input your desired numbers of stars from 0 to 5 ");
-            lowstars = scanner.nextInt();
+            lowstars = scanner.nextDouble();
             scanner.nextLine();
-            highstars = scanner.nextInt();
+            highstars = scanner.nextDouble();
             scanner.nextLine();
         }
 
@@ -161,7 +172,7 @@ public class DummyClient{
         
         Message req = new Message(Message.action.search,PlayerID);
 
-        req.add_payload(category,lowstars,highstars,risk,betCategory);
+        req.add_payload(providers,lowstars,highstars,risk,betCategory);
 
         Message resp = communicate(req);
 
@@ -223,8 +234,9 @@ public class DummyClient{
         System.out.println("\n");
 
         Message req = new Message(Message.action.search_games,PlayerID);
-
-        req.add_payload("all",0,5,"all","all");
+        ArrayList<String> providers = new ArrayList<>();
+        providers.add("all")
+        req.add_payload(providers,0,5,"all","all");
 
         Message resp = communicate(req);
 
