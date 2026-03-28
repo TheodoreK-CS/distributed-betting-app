@@ -11,7 +11,7 @@ public class DummyClient{
     private ObjectOutputStream out ;
 	private ObjectInputStream in ;
     private int master_port;
-    private int PlayerID;
+    private String PlayerID;
     private double balance=0;
 
 
@@ -45,7 +45,7 @@ public class DummyClient{
             
 
         System.out.println("Welcome player, please input your ID");
-        PlayerID = scanner.nextInt();
+        PlayerID = scanner.next();
         scanner.nextLine();
         //Start of a while loop that continues till the player exits
         while(true){
