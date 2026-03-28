@@ -137,7 +137,7 @@ public class DummyClient{
 
         //Risk -----
         String risk = "all";
-        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high") && !risk.equals("all"){
+        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high") && !risk.equals("all")){
             System.out.println("Please choose your risk (low,medium,high,all): ");
             risk = scanner.nextLine();
 
