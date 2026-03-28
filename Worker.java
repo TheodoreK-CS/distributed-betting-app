@@ -19,7 +19,7 @@ class Worker{
     private int reducerPort ;
 
     public Worker(int port, int reducer_ports) throws IOException{  
-        WorkerSocketSocket = new ServerSocket(port);
+        WorkerSocket = new ServerSocket(port);
         this.reducerPort = reducer_ports;
     }
 
@@ -43,7 +43,8 @@ class Worker{
             try{
                 Socket socket1 = WorkerSocket.accept();
                 requestHandler thread = new requestHandler(socket1);
-                Thread(thread).start();
+                Thread t = new Thread(thread);
+                t.start();
 
             }
             catch(IOException e){
@@ -72,15 +73,15 @@ class Worker{
             }
         }
 
-    public void communicate(){
+    public void communicateReducer(Message reducerMessage){
 
-        //Message responce = new Message();
         try{
+
             Socket reducer = new Socket("localhost",reducerPort);
             ObjectOutputStream reducerOut = new ObjectOutputStream(reducer.getOutputStream());
             ObjectInputStream reducerIn = new ObjectInputStream(reducer.getInputStream());
 
-            reducerOut.writeObject(obj);
+            reducerOut.writeObject(reducerMessage);
             reducerOut.flush();
 
             reducerIn.close();
@@ -90,28 +91,63 @@ class Worker{
         catch (IOException e) {
 
         }
+    }       
+    public void communicateMaster(Message responce){
 
+        try{
+            out.writeObject(responce);
+            out.flush();    
+        }
+        catch (IOException e) {
 
+        }
     }
 
+
+
+
+    
+
         public void run(){
+            Message responce;
             try {
                 Message obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
                     game_list.add(obj.get_game());
+                    responce = new Message(command);
+                    responce.addContext("new game added ");
+                    communicateMaster(responce);
                 }
                 else if(command == Message.action.remove_game){
                     for(Game g:game_list){
                         if(obj.get_name().equals(g.getGameName())){
                             g.setActive(false);
+                            responce = new Message(command);
+                            responce.addContext("removed game ");
+                            communicateMaster(responce);
                             break;
                         }
                         
                     }
                 }
                 else if(command == Message.action.search_games){
-
+                    ArrayList<Game> searchedGames = new ArrayList<>();
+                    Message reducerMessage = new Message(command);
+                    for(Game g:game_list){
+                        if(obj.getProviders().contains(g.getProviderName()) || obj.getProviders().contains("all")){
+                            if(obj.getLowStars()<g.getStars() && obj.getHighStars()>g.getStars()){
+                                if (obj.getRisk().equals(g.getRiskLevel())|| obj.getRisk().equals("all")) {
+                                    if(obj.getCategory().equals(g.getBetCategory()) || obj.getCategory().equals("all")){
+                                        searchedGames.add(g);
+                                    }
+                                }
+                            }
+                        }                   
+                    }
+                    reducerMessage.setSearchedGames(searchedGames);
+                    reducerMessage.set_id(obj.get_id());
+                    communicateReducer(reducerMessage);
                 }
                 else if(command == Message.action.play_bet){
 
@@ -129,6 +165,9 @@ class Worker{
                     for(Game g:game_list){
                         if(obj.get_name().equals(g.getGameName())){
                             g.game_review(obj.getStar());
+                            responce = new Message(command);
+                            responce.addContext("new review added");
+                            communicateMaster(responce);
                             break;
                         }
                     }

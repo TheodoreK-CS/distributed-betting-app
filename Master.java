@@ -47,7 +47,8 @@ class Master{
             try{
                 Socket socket1 = MasterSocket.accept();
                 requestHandler thread = new requestHandler(socket1);
-                Thread(thread).start();
+                Thread t = new Thread(thread);
+                t.start();
 
             }
             catch(IOException e){
@@ -113,7 +114,7 @@ class Master{
 
             try{
                 for(Integer i:workerPorts){
-                    
+                    //syncronized
                     obj.set_id(count);
                     id.put(count, socket);
                     count ++;

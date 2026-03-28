@@ -40,8 +40,8 @@ class Reducer{
             try{
                 Socket socket1 = ReducerSocket.accept();
                 requestHandler thread = new requestHandler(socket1);
-                Thread(thread).start();
-
+                Thread t = new Thread(thread);
+                t.start();
             }
             catch(IOException e){
 
@@ -67,7 +67,18 @@ class Reducer{
 
             }
         }
-    
+
+        public void communicateMaster(Message responce){
+            try{
+                out.writeObject(responce);
+                out.flush();
+            }
+            catch (IOException e) {
+
+            }
+        }
+
+
         public void run(){
                 try {
                     Message obj = (Message) in.readObject();
