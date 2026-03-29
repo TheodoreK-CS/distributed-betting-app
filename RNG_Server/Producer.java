@@ -22,9 +22,9 @@ public class Producer extends Thread{
 
         while (true){
             //generate random number
-            int winningNumber = secureRandom.nextInt(37);
+            int winningNumber = secureRandom.nextInt(100);
 
-            //combine number and secret
+            //combine number and secret to get them ready for hashing
             String rawData = winningNumber + secretS;
                 
             //hash
@@ -33,7 +33,7 @@ public class Producer extends Thread{
             //put number and hash in tuple
             Tuple pair = new Tuple(winningNumber, hash);
                 
-            //put in buffer in last place
+            //put tuple in buffer in last place
             buffer.put(pair);
                 
         
@@ -43,10 +43,12 @@ public class Producer extends Thread{
 
     private String calculateSHA256(String input) {
         try {
+            //get sha-256 algorithm
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            //use algorithm on the bytes and put them in a byte array
             byte[] hashBytes = digest.digest(input.getBytes());
             
-            // Convert the raw bytes into a standard Hexadecimal string
+            //make hashed bytes into a string
             StringBuilder hexString = new StringBuilder(2 * hashBytes.length);
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);

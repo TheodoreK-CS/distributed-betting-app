@@ -28,7 +28,10 @@ public class Message implements Serializable{
         //will have Bet object payload(see Bet class)
         play_bet,        // Player  -> Master -> Worker
 
-        //doesn't need payload only the action
+        //will have Game object payload(see Game class)
+        init_random,
+
+        //will have the game name as a payload
         request_random,  // Worker  -> RNG
 
         //will have RandomResult object payload(see RandomResult class)

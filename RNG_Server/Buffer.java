@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class Buffer {
 
-
+    //buffer list
     private final LinkedList<Tuple> buffer = new LinkedList<>();
     
     //buffer capacity
