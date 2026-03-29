@@ -1,15 +1,23 @@
 package MessageEssentials;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 
 public class Message implements Serializable{
 
     //custom object id so transfer doesn't crash because of small changes in the Message class
     private static final long serialVersionUID = 1L;
     private int id_pairing;
+    private String playerId;
+    private String gameName, Risk, Category;
+    private Game game;
+    private double stars,LowStars,HighStars,betAmount,minBet,maxBet;
+    private String context;
+    private ArrayList<Game> games = new ArrayList<>();
+    private ArrayList<String> Providers = new ArrayList<>();
 
 
-    //what is the message carrying?
     public enum action {
         //these are also all final variables
 
@@ -49,24 +57,20 @@ public class Message implements Serializable{
 
         
         review_game,
-    }
 
-    //these values must be from the list of senders and actions
+        empty,
+    }
 
     private action message_action;
-
-    //the payload can take the form of anything we want to send
-    private Object payload;
-
-    //message with payload
-    public Message(action message_action, Object payload){
+   
+    public Message(action message_action, String playerId){
 
         this.message_action = message_action;
-        this.payload = payload;
+        this.playerId = playerId;
 
     }
 
-    //message without payload for simple commands that don't need payload(example: request_random, )
+    
     public Message(action message_action){
 
         this.message_action = message_action;
@@ -77,10 +81,6 @@ public class Message implements Serializable{
         return message_action;
     }
 
-    public Object getPayload(){
-        return payload;
-    }
-
     public int get_id(){
         return id_pairing;
     }
@@ -88,4 +88,82 @@ public class Message implements Serializable{
     public void set_id(int id){
         this.id_pairing = id;
     }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
+    public void addContext(String context){
+        this.context=context;
+    }
+    public String getContext(){
+        return context;
+    }
+
+    public String get_name() {
+        return gameName;
+    }
+
+    public void addGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
+    public Game get_game() {
+        return game;
+    }
+
+    public void add_Game(Game game) {
+        this.game = game;
+    }
+
+    public double getStar() {
+        return stars;
+    }
+
+    public void setStars(double stars) {
+        this.stars = stars;
+    }
+
+    public void setSearchedGames(ArrayList<Game> games){
+        this.games=games;
+    }
+    public ArrayList<Game> getSearchedGames(){
+        return games;
+    }
+    public ArrayList<String> getProviders(){
+        return Providers;
+    }
+    public Double getLowStars(){
+        return LowStars;
+    }
+    public Double getHighStars(){
+        return HighStars;
+    }
+    public String getRisk(){
+        return Risk;
+    }
+    public String getCategory(){
+        return Category;
+    }
+    public void add_payload(ArrayList<String> Providers, double lowstars, double highstars,String risk,String Category){
+        this.Providers=Providers;
+        this.LowStars=lowstars;
+        this.HighStars=highstars;
+        this.Risk=risk;
+        this.Category=Category;
+    }
+    public void add_payload(String gameName, double betAmount){
+        this.gameName=gameName;
+        this.betAmount=betAmount;
+    }
+    public void add_payload(double minBet,double maxBet,String Risk){
+        this.minBet=minBet;
+        this.maxBet=maxBet;
+        this.Risk=Risk;
+    }
+
 }

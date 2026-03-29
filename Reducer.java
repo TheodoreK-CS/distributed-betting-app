@@ -14,14 +14,13 @@ import java.lang.Runnable;
 class Reducer{
 
     private ServerSocket ReducerSocket;
-
-
+    
+    
     public Reducer(int port) throws IOException{
         ReducerSocket = new ServerSocket(port);
-
     }
 
-    public void main(String args[]){
+    public static void main(String args[]){
         try{
 
             int port = Integer.parseInt(args[0]);
@@ -40,8 +39,8 @@ class Reducer{
             try{
                 Socket socket1 = ReducerSocket.accept();
                 requestHandler thread = new requestHandler(socket1);
-                Thread(thread).start();
-
+                Thread t = new Thread(thread);
+                t.start();
             }
             catch(IOException e){
 
@@ -67,20 +66,22 @@ class Reducer{
 
             }
         }
-    
+
+        public void communicateMaster(Message responce){
+            try{
+                out.writeObject(responce);
+                out.flush();
+            }
+            catch (IOException e) {
+
+            }
+        }
+
+
         public void run(){
                 try {
                     Message obj = (Message) in.readObject();
-                    Message.action command = obj.getMessageAction();
-                    if (command == Message.action.search_games){
-
-                    }
-                    else if(command == Message.action.game_profit){
-
-                    }
-                    else if(command == Message.action.player_profit){
-
-                    }
+                    
 
                 }
                 catch (IOException e) {

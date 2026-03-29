@@ -11,7 +11,7 @@ public class DummyClient{
     private ObjectOutputStream out ;
 	private ObjectInputStream in ;
     private int master_port;
-    private int PlayerID;
+    private String PlayerID;
     private double balance=0;
 
 
@@ -45,7 +45,7 @@ public class DummyClient{
             
 
         System.out.println("Welcome player, please input your ID");
-        PlayerID = scanner.nextInt();
+        PlayerID = scanner.next();
         scanner.nextLine();
         //Start of a while loop that continues till the player exits
         while(true){
@@ -104,14 +104,17 @@ public class DummyClient{
         System.out.println("Give store name.");
         String GameName = scanner.nextLine();
         System.out.println("Give rating.");
-        String rating = scanner.nextLine();
+        double rating = scanner.nextDouble();
 
         
-        Message req = new Message(Message.Action.review_game,PlayerID);
+        Message req = new Message(Message.action.review_game,PlayerID);
 
-        req.add_payload(GameName,rating);
+        req.addGameName(GameName);
+        req.setStars(rating);
 
         Message resp = communicate(req);
+
+        System.out.println(resp.getContext());
 
     }
 
@@ -120,48 +123,56 @@ public class DummyClient{
     public void search(){
 
         //Category -----
-        String category = "all";
-        System.out.println("Please input game category");
-        category = scanner.nextLine();
-
+        ArrayList<String> providers = new ArrayList<>();
+        while(true){
+            System.out.println("Please input game provider or type '0' to procceed.");
+            String temp = scanner.nextLine();
+            if (temp.equals("0")){
+                break;
+            }
+            providers.add(temp);
+        }
+        if (providers.size()==0){
+            providers.add("all");
+        }
         //Stars -----
-        int lowstars = -1;
-        int highstars = 6;
+        double lowstars = -1;
+        double highstars = 6;
         while(lowstars<0 || highstars>5 || lowstars > highstars){
             System.out.println("Please input your desired numbers of stars from 0 to 5 ");
-            lowstars = scanner.nextInt();
+            lowstars = scanner.nextDouble();
             scanner.nextLine();
-            highstars = scanner.nextInt();
+            highstars = scanner.nextDouble();
             scanner.nextLine();
         }
 
         //Risk -----
-        String risk = "";
-        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")){
-            System.out.println("Please choose your risk (low,medium,high): ");
+        String risk = "all";
+        while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high") && !risk.equals("all")){
+            System.out.println("Please choose your risk (low,medium,high,all): ");
             risk = scanner.nextLine();
 
-            if(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")){
+            if(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high")&& !risk.equals("all")){
                 System.out.println("False risk choice");
             }
         }
         
 
         //Bet Category -----
-        String betCategory = "";
-        while(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")){
-            System.out.println("Please choose a bet category ($, $$, $$$): ");
+        String betCategory = "all";
+        while(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")&& !betCategory.equals("all")){
+            System.out.println("Please choose a bet category ($, $$, $$$, all): ");
             betCategory = scanner.nextLine();
 
-            if(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")){
+            if(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")&& !betCategory.equals("all")){
                 System.out.println("Wrong bet category choice");
             }
         }
 
         
-        Message req = new Message(Message.Action.search,PlayerID);
+        Message req = new Message(Message.action.search_games,PlayerID);
 
-        req.add_payload(category,lowstars,highstars,risk,betCategory);
+        req.add_payload(providers,lowstars,highstars,risk,betCategory);
 
         Message resp = communicate(req);
 
@@ -188,7 +199,7 @@ public class DummyClient{
             scanner.nextLine();
         }
 
-        Message req = new Message(Message.Action.play_bet,PlayerID);
+        Message req = new Message(Message.action.play_bet,PlayerID);
 
         req.add_payload(GameName, BetAmount);
 
@@ -222,9 +233,10 @@ public class DummyClient{
 
         System.out.println("\n");
 
-        Message req = new Message(Message.Action.search_games,PlayerID);
-
-        req.add_payload("all",0,5,"all","all");
+        Message req = new Message(Message.action.search_games,PlayerID);
+        ArrayList<String> providers = new ArrayList<>();
+        providers.add("all");
+        req.add_payload(providers,0,5,"all","all");
 
         Message resp = communicate(req);
 
@@ -233,7 +245,7 @@ public class DummyClient{
 
     public Message communicate(Message obj){
 
-        Message res=new Message();
+        Message res=new Message(Message.action.empty);
 
         try{
             master=new Socket("localhost",master_port);
