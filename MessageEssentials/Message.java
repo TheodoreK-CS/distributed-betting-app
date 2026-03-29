@@ -8,6 +8,7 @@ public class Message implements Serializable{
 
     //custom object id so transfer doesn't crash because of small changes in the Message class
     private static final long serialVersionUID = 1L;
+    
     private int id_pairing;
     private String playerId;
     private String gameName, Risk, Category;
@@ -38,6 +39,8 @@ public class Message implements Serializable{
 
         //will have Game object payload(see Game class)
         init_random,
+
+        delete_random,
 
         //will have the game name as a payload
         request_random,  // Worker  -> RNG

@@ -32,15 +32,31 @@ public class RNGServer {
 
                 if (action == Message.action.init_random) {
                     // --- PHASE 1: INITIALIZATION ---
-                    Game game = (Game) incomingMessage.getPayload();
+                    Game game = (Game) incomingMessage.get_game();
                     setupNewGame(game);
-                    
-                    // Close the socket because we don't need to send a number back right now
                     clientSocket.close(); 
                     
                 } else if (action == Message.action.request_random) {
                     // --- PHASE 2: HAND OUT A NUMBER ---
                     provideNumber(incomingMessage, clientSocket);
+
+                } else if (action == Message.action.delete_random) {
+                    // --- PHASE 3: CLEANUP ---
+                    // Extract the name from the message envelope
+                    String gameNameToRemove = incomingMessage.get_name();
+
+                    synchronized (gameBuffers) {
+                        if (gameBuffers.containsKey(gameNameToRemove)) {
+                            // Removing from the HashMap stops new Consumers from finding it.
+                            // The Producer for this buffer will eventually stop because 
+                            // it will no longer be reachable.
+                            gameBuffers.remove(gameNameToRemove);
+                            System.out.println("CLEANUP: Buffer and Producer removed for " + gameNameToRemove);
+                        } else {
+                            System.out.println("CLEANUP: No active buffer found for " + gameNameToRemove);
+                        }
+                    }
+                    clientSocket.close();
                 }
             }
             
@@ -54,7 +70,7 @@ public class RNGServer {
         try {
             // 1. Open the envelope to find out WHICH game needs a number
             //get the game name from payload
-            String gameName = (String) incomingMessage.getPayload();
+            String gameName = incomingMessage.get_name();
             
             Buffer targetBuffer = null;
 
