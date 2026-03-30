@@ -7,31 +7,34 @@ public class Game implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private String gameName;
-    private String providerName;
-    private double stars;
-    private int noOfVotes;
-    private String gameLogoPath;
-    private double minBet;
-    private double maxBet;
-    private String riskLevel;
+    private String providerId;
+    private double Stars;
+    private int NoOfVotes;
+    private String GameLogo;
+    private double MinBet;
+    private double MaxBet;
+    private String RiskLevel;
     private double profit;
     private String betCategory;
     private int jackpot;
     private Boolean is_Active = true;
     //for rng safety
+    private String HashKey;
     private String safetyNumber;
 
 
-    Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
+    public Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
         this.gameName = gameName;
-        this.providerName = providerName;
-        this.stars = stars;
-        this.noOfVotes = noOfVotes;
-        this.gameLogoPath = gameLogoPath;
-        this.minBet = minBet;
-        this.maxBet = maxBet;
-        this.riskLevel = riskLevel;
-        this.safetyNumber = safetyNumber;
+        this.providerId = providerName;
+        this.Stars = stars;
+        this.NoOfVotes = noOfVotes;
+        this.GameLogo = gameLogoPath;
+        this.MinBet = minBet;
+        this.MaxBet = maxBet;
+        this.RiskLevel = riskLevel;
+        this.HashKey = safetyNumber;
+
+        this.safetyNumber=HashKey;
 
         //gets the bet category from calculateBetCategory method
         this.betCategory = calculateBetCategory(minBet);
@@ -77,8 +80,8 @@ public class Game implements Serializable{
 
     public void game_review(double star){
 
-        noOfVotes++;
-        stars = (stars*(noOfVotes-1)+star)/noOfVotes;
+        NoOfVotes++;
+        Stars = (Stars*(NoOfVotes-1)+star)/NoOfVotes;
     }
 
     //getters
@@ -86,25 +89,25 @@ public class Game implements Serializable{
         return gameName;
     }
     public String getProviderName(){
-        return providerName;
+        return providerId;
     }
     public double getStars(){
-        return stars;
+        return Stars;
     }
     public int getNoOfVotes(){
-        return noOfVotes;
+        return NoOfVotes;
     }
     public String getGameLogoPath(){
-        return gameLogoPath;
+        return GameLogo;
     }
     public double getMinBet(){
-        return minBet;
+        return MinBet;
     }
     public double getMaxBet(){
-        return maxBet;
+        return MaxBet;
     }
     public String getRiskLevel(){
-        return riskLevel;
+        return RiskLevel;
     }
     public String getSafetyNumber(){
         return safetyNumber;
@@ -127,33 +130,33 @@ public class Game implements Serializable{
     }
 
     public void setProviderName(String providerName){
-        this.providerName = providerName;
+        this.providerId = providerName;
     }
 
     public void setStars(double stars){
-        this.stars = stars;
+        this.Stars = stars;
     }
 
     public void setNoOfVotes(int noOfVotes){
-        this.noOfVotes = noOfVotes;
+        this.NoOfVotes = noOfVotes;
     }
 
     public void setGameLogoPath(String gameLogoPath){
-        this.gameLogoPath = gameLogoPath;
+        this.GameLogo = gameLogoPath;
     }
 
     public void setMinBet(double minBet){
-        this.minBet = minBet;
-        this.betCategory = calculateBetCategory(this.minBet);
+        this.MinBet = minBet;
+        this.betCategory = calculateBetCategory(this.MinBet);
     }
 
     public void setMaxBet(double maxBet){
-        this.maxBet = maxBet;
+        this.MaxBet = maxBet;
     }
 
     public void setRiskLevel(String riskLevel){
-        this.riskLevel = riskLevel;
-        this.jackpot = calculateJackpot(this.riskLevel);
+        this.RiskLevel = riskLevel;
+        this.jackpot = calculateJackpot(this.RiskLevel);
     }
 
     public void setSafetyNumber(String safetyNumber){
@@ -164,14 +167,14 @@ public class Game implements Serializable{
     }
 
     public String toString(){
-        String temp=gameName+"  "+stars;
+        String temp=gameName+"  "+Stars;
         return temp;
     }
 
-    private void change_profit(double x){
+    public void change_profit(double x){
         profit=profit+x;
     }
-    private double getProfit(){
+    public double getProfit(){
         return profit;
     }
 }

@@ -3,6 +3,8 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import MessageEssentials.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Manager {
     private Scanner scanner;
@@ -91,18 +93,37 @@ public class Manager {
     //Insert game
 
     public void insertGame(){
-        Game game;
         System.out.println("Please input .json file path and image path");
         String jsonPath = scanner.nextLine();
         
-        ///json
+        try{
+            FileReader reader = new FileReader(jsonPath);
 
-        
+            JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
 
-        Message req = new Message(Message.action.add_game);
-        req.add_Game(game);
-        Message resp = communicate(req);
-        System.out.println(resp.getContext());
+            reader.close();
+
+            String gameName = obj.get("GameName").getAsString();
+            String provider = obj.get("ProviderName").getAsString();
+            double stars = obj.get("Stars").getAsDouble();
+            int votes = obj.get("NoOfVotes").getAsInt();
+            String logo = obj.get("GameLogo").getAsString();
+            double minBet = obj.get("MinBet").getAsDouble();
+            double maxBet = obj.get("MaxBet").getAsDouble();
+            String risk = obj.get("RiskLevel").getAsString();
+            String hash = obj.get("HashKey").getAsString();
+
+            Game game=new Game(gameName,provider,stars,votes,logo,minBet,maxBet,risk,hash);
+
+            Message req = new Message(Message.action.add_game);
+            req.add_Game(game);
+            Message resp = communicate(req);
+            System.out.println(resp.getContext());
+
+        }
+        catch (Exception e) {
+            System.out.println("Invalid json path");
+        }
 
     }
     
@@ -161,7 +182,7 @@ public class Manager {
             Message resp = communicate(req);
             games=resp.getSearchedGames();
             for (Game g:games){
-                System.out.println("Game: "+g.get_game+", plus/minus: "g.getProfit());
+                System.out.println("Game: "+g.getGameName()+", plus/minus: "+g.getProfit());
             }
         }
         else if (choice.equals("2")){

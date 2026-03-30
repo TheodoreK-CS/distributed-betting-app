@@ -2,7 +2,7 @@ import java.net.Socket;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-import MessageEssentials.Message;
+import MessageEssentials.*;
 
 
 public class DummyClient{

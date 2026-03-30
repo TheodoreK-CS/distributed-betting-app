@@ -104,7 +104,7 @@ class Worker{
         public void run(){
             Message responce;
             try {
-                Message obj = (Message) in.readObject();
+                obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
                     game_list.add(obj.get_game());
@@ -178,10 +178,27 @@ class Worker{
 
                 }
                 else if(command == Message.action.change_game){
+                    for(Game g:game_list){
+                        if(obj.get_name().equals(g.getGameName())){
+                            g.setMaxBet(obj.get_maxBet());
+                            g.setMinBet(obj.get_minBet());
+                            g.setRiskLevel(obj.get_risk());
+    
+                            responce = new Message(command);
+                            responce.addContext("Game Changed");
+                            communicateMaster(responce);
+                            break;
+                        }
+                    }
                 }
                 else if(command == Message.action.game_profit){
+                    Message reducerMessage = new Message(command);
+                    reducerMessage.setSearchedGames(game_list);
+                    reducerMessage.set_id(obj.get_id());
+                    communicateReducer(reducerMessage);
                 }
                 else if(command == Message.action.player_profit){
+                    /// player id missing ??????????????????????????????????????????
                 }
                 else if(command == Message.action.review_game){
                     for(Game g:game_list){

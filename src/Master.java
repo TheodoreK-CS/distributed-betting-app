@@ -109,15 +109,21 @@ class Master{
             return response;
         }
 
+        public synchronized void set_req_id(){
+            obj.set_id(count);
+            id.put(count, socket);
+            count ++;
+        }
+
         public void communicate_all(){
 
-
+            set_req_id();
+            
             try{
                 for(Integer i:workerPorts){
-                    //syncronized
-                    obj.set_id(count);
-                    id.put(count, socket);
-                    count ++;
+                    
+                    
+
                     Socket worker = new Socket("localhost",i);
                     ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
                     ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());
@@ -138,7 +144,7 @@ class Master{
         } 
 
         public void run(){
-            Message response;
+            Message response=new Message(Message.action.empty);
             try {
                 obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
@@ -146,12 +152,16 @@ class Master{
                     int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
+                    out.writeObject(response);
+                    out.flush();
 
                 }
                 else if(command == Message.action.remove_game){
                     int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
+                    out.writeObject(response);
+                    out.flush();
 
                 }
                 else if(command == Message.action.search_games){
@@ -161,12 +171,16 @@ class Master{
                     int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
+                    out.writeObject(response);
+                    out.flush();
 
                 }
                 else if(command == Message.action.change_game){
                     int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
+                    out.writeObject(response);
+                    out.flush();
 
                 }
                 else if(command == Message.action.game_profit){
@@ -179,7 +193,11 @@ class Master{
                     int hash = obj.get_name().hashCode();
                     int temp = Math.abs(hash % workerPorts.size());
                     response = communicate(temp);
+                    out.writeObject(response);
+                    out.flush();
                 }
+                else if(command == Message.action.reducer_resp){
+                }               
                 
             }
             catch (IOException e) {

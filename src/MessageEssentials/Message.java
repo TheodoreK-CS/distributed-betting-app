@@ -62,6 +62,8 @@ public class Message implements Serializable{
         review_game,
 
         empty,
+
+        reducer_resp,
     }
 
     private action message_action;
@@ -168,5 +170,16 @@ public class Message implements Serializable{
         this.maxBet=maxBet;
         this.Risk=Risk;
     }
-
+    public Double get_minBet(){
+        return minBet;
+    }
+    public Double get_maxBet(){
+        return maxBet;
+    }
+    public String get_risk(){
+        return Risk;
+    }
+    public Double get_betAmount(){
+        return betAmount;
+    }
 }
