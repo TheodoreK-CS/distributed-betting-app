@@ -171,7 +171,7 @@ class Worker{
                     Message reducerMessage = new Message(command);
                     for(Game g:snapshot){
                         if(obj.getProviders().contains(g.getProviderName()) || obj.getProviders().contains("all")){
-                            if(obj.getLowStars()<g.getStars() && obj.getHighStars()>g.getStars()){
+                            if(obj.getLowStars()<=g.getStars() && obj.getHighStars()>=g.getStars()){
                                 if (obj.getRisk().equals(g.getRiskLevel())|| obj.getRisk().equals("all")) {
                                     if(obj.getCategory().equals(g.getBetCategory()) || obj.getCategory().equals("all")){
                                         searchedGames.add(g);
