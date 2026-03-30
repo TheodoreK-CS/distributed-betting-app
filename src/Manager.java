@@ -93,7 +93,7 @@ public class Manager {
     //Insert game
 
     public void insertGame(){
-        System.out.println("Please input .json file path and image path");
+        System.out.print("Please input .json file path: ");
         String jsonPath = scanner.nextLine();
         
         try{

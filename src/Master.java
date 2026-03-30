@@ -16,6 +16,7 @@ class Master{
     private ArrayList<Integer> workerPorts = new ArrayList<>();
     private Map<Integer, Socket> id = new HashMap<>();
     private int count = 0;
+    private final Object requestIdLock = new Object();
 
 
     public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
@@ -109,16 +110,18 @@ class Master{
             return response;
         }
 
-        public synchronized void set_req_id(){
-            obj.set_id(count);
-            id.put(count, socket);
-            count ++;
+        private void set_req_id() {
+            synchronized (requestIdLock) {
+                int currentId = count++;
+                obj.set_id(currentId);
+                id.put(currentId, socket);
+            }
         }
 
         public void communicate_all(){
 
             set_req_id();
-            
+
             try{
                 for(Integer i:workerPorts){
                     

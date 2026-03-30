@@ -105,6 +105,7 @@ public class DummyClient{
         String GameName = scanner.nextLine();
         System.out.println("Give rating.");
         double rating = scanner.nextDouble();
+        scanner.nextLine();
 
         
         Message req = new Message(Message.action.review_game,PlayerID);

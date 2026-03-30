@@ -123,6 +123,7 @@ public class Message implements Serializable{
 
     public void add_Game(Game game) {
         this.game = game;
+        this.gameName=game.getGameName();
     }
 
     public double getStar() {

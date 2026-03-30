@@ -16,6 +16,7 @@ class Worker{
     private ServerSocket WorkerSocket;
     private ArrayList<Game> game_list = new ArrayList<>();
     private int reducerPort ;
+    private final Object gameListLock = new Object();
 
     public Worker(int port, int reducer_ports) throws IOException{  
         WorkerSocket = new ServerSocket(port);
@@ -107,8 +108,9 @@ class Worker{
                 obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
-                    game_list.add(obj.get_game());
-
+                    synchronized (gameListLock) {
+                        game_list.add(obj.get_game());
+                    }   
                     contactRNG(obj.get_game(), Message.action.init_random);
 
                     responce = new Message(command);
@@ -116,23 +118,35 @@ class Worker{
                     communicateMaster(responce);
                 }
                 else if(command == Message.action.remove_game){
-                    for(Game g:game_list){
-                        if(obj.get_name().equals(g.getGameName())){
-                            g.setActive(false);
+                    String removedGameName = null;
 
-                            contactRNG(g.getGameName(), Message.action.delete_random);
+                    synchronized (gameListLock) {
+                        for (Game g : game_list) {
+                            if (obj.get_name().equals(g.getGameName())) {
+                                g.setActive(false);
+                                removedGameName = g.getGameName();
+                                break;
+                            }
+                        }
+                    }
 
-                            responce = new Message(command);
-                            responce.addContext("removed game ");
-                            communicateMaster(responce);
-                            break;
-                        }  
+                    if (removedGameName != null) {
+                        contactRNG(removedGameName, Message.action.delete_random);
+
+                        responce = new Message(command);
+                        responce.addContext("removed game ");
+                        communicateMaster(responce);
                     }
                 }
                 else if(command == Message.action.search_games){
+                    ArrayList<Game> snapshot;
+
+                    synchronized (gameListLock) {
+                        snapshot = new ArrayList<>(game_list);
+                    }
                     ArrayList<Game> searchedGames = new ArrayList<>();
                     Message reducerMessage = new Message(command);
-                    for(Game g:game_list){
+                    for(Game g:snapshot){
                         if(obj.getProviders().contains(g.getProviderName()) || obj.getProviders().contains("all")){
                             if(obj.getLowStars()<g.getStars() && obj.getHighStars()>g.getStars()){
                                 if (obj.getRisk().equals(g.getRiskLevel())|| obj.getRisk().equals("all")) {
@@ -178,17 +192,24 @@ class Worker{
 
                 }
                 else if(command == Message.action.change_game){
-                    for(Game g:game_list){
-                        if(obj.get_name().equals(g.getGameName())){
-                            g.setMaxBet(obj.get_maxBet());
-                            g.setMinBet(obj.get_minBet());
-                            g.setRiskLevel(obj.get_risk());
-    
-                            responce = new Message(command);
-                            responce.addContext("Game Changed");
-                            communicateMaster(responce);
-                            break;
+                    boolean changed = false;
+
+                    synchronized (gameListLock) {
+                        for (Game g : game_list) {
+                            if (obj.get_name().equals(g.getGameName())) {
+                                g.setMaxBet(obj.get_maxBet());
+                                g.setMinBet(obj.get_minBet());
+                                g.setRiskLevel(obj.get_risk());
+                                changed = true;
+                                break;
+                            }
                         }
+                    }
+
+                    if (changed) {
+                        responce = new Message(command);
+                        responce.addContext("Game Changed");
+                        communicateMaster(responce);
                     }
                 }
                 else if(command == Message.action.game_profit){
@@ -201,14 +222,22 @@ class Worker{
                     /// player id missing ??????????????????????????????????????????
                 }
                 else if(command == Message.action.review_game){
-                    for(Game g:game_list){
-                        if(obj.get_name().equals(g.getGameName())){
-                            g.game_review(obj.getStar());
-                            responce = new Message(command);
-                            responce.addContext("new review added");
-                            communicateMaster(responce);
-                            break;
+                    boolean reviewed = false;
+
+                    synchronized (gameListLock) {
+                        for (Game g : game_list) {
+                            if (obj.get_name().equals(g.getGameName())) {
+                                g.game_review(obj.getStar());
+                                reviewed = true;
+                                break;
+                            }
                         }
+                    }
+
+                    if (reviewed) {
+                        responce = new Message(command);
+                        responce.addContext("new review added");
+                        communicateMaster(responce);
                     }
                 }
             }
