@@ -108,13 +108,31 @@ class Worker{
                 obj = (Message) in.readObject();
                 Message.action command = obj.getMessageAction();
                 if (command == Message.action.add_game){
+                    Game newGame = obj.get_game();
+                    boolean added = false;
+
                     synchronized (gameListLock) {
-                        game_list.add(obj.get_game());
-                    }   
-                    contactRNG(obj.get_game(), Message.action.init_random);
+                        boolean exists = false;
+                        for (Game g : game_list) {
+                            if (g.getGameName().equals(newGame.getGameName())) {
+                                exists = true;
+                                break;
+                            }
+                        }
+
+                        if (!exists) {
+                            game_list.add(newGame);
+                            added = true;
+                        }
+                    }
 
                     responce = new Message(command);
-                    responce.addContext("new game added ");
+                    if (added) {
+                        contactRNG(newGame, Message.action.init_random);
+                        responce.addContext("new game added");
+                    } else {
+                        responce.addContext("game already exists");
+                    }
                     communicateMaster(responce);
                 }
                 else if(command == Message.action.remove_game){
@@ -135,6 +153,11 @@ class Worker{
 
                         responce = new Message(command);
                         responce.addContext("removed game ");
+                        communicateMaster(responce);
+                    }
+                    else{
+                        responce = new Message(command);
+                        responce.addContext("game does not exist");
                         communicateMaster(responce);
                     }
                 }
@@ -170,10 +193,12 @@ class Worker{
                     if(rngData != null) {
 
                         String secretKey = "";
-                        for(Game g : game_list) {
-                            if(g.getGameName().equals(gName)) {
-                                secretKey = g.getSafetyNumber();
-                                break;
+                        synchronized (gameListLock) {
+                            for (Game g : game_list) {
+                                if (g.getGameName().equals(gName)) {
+                                    secretKey = g.getSafetyNumber();
+                                    break;
+                                }
                             }
                         }
 
@@ -211,10 +236,21 @@ class Worker{
                         responce.addContext("Game Changed");
                         communicateMaster(responce);
                     }
+                    else{
+                        responce = new Message(command);
+                        responce.addContext("game does not exist");
+                        communicateMaster(responce);
+                    }
                 }
                 else if(command == Message.action.game_profit){
+                    ArrayList<Game> snapshot;
+
+                    synchronized (gameListLock) {
+                        snapshot = new ArrayList<>(game_list);
+                    }
+
                     Message reducerMessage = new Message(command);
-                    reducerMessage.setSearchedGames(game_list);
+                    reducerMessage.setSearchedGames(snapshot);
                     reducerMessage.set_id(obj.get_id());
                     communicateReducer(reducerMessage);
                 }
@@ -237,6 +273,11 @@ class Worker{
                     if (reviewed) {
                         responce = new Message(command);
                         responce.addContext("new review added");
+                        communicateMaster(responce);
+                    }
+                    else{
+                        responce = new Message(command);
+                        responce.addContext("game does not exist");
                         communicateMaster(responce);
                     }
                 }
