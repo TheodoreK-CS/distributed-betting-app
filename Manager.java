@@ -155,20 +155,25 @@ public class Manager {
         
         System.out.println("View stats for: 1.Games | 2.Player");
         String choice = scanner.nextLine();
-
+        ArrayList<Game> games=new ArrayList<>();
         if(choice.equals("1")){
             Message req = new Message(Message.action.game_profit);
             Message resp = communicate(req);
+            games=resp.getSearchedGames();
+            for (Game g:games){
+                System.out.println("Game: "+g.get_game+", plus/minus: "g.getProfit());
+            }
         }
         else if (choice.equals("2")){
             Message req = new Message(Message.action.player_profit);
             Message resp = communicate(req);
+            //player id missing????????????????????????????????????????????????
         }
         else {
             System.out.println("Invalid choice.");
         }
 
-        ///print results
+        
     }
 
 

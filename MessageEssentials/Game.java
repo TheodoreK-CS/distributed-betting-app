@@ -14,12 +14,13 @@ public class Game implements Serializable{
     private double minBet;
     private double maxBet;
     private String riskLevel;
-
+    private double profit;
     private String betCategory;
     private int jackpot;
     private Boolean is_Active = true;
     //for rng safety
     private String safetyNumber;
+
 
     Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
         this.gameName = gameName;
@@ -162,4 +163,15 @@ public class Game implements Serializable{
         this.is_Active = is_Active;
     }
 
+    public String toString(){
+        String temp=gameName+"  "+stars;
+        return temp;
+    }
+
+    private void change_profit(double x){
+        profit=profit+x;
+    }
+    private double getProfit(){
+        return profit;
+    }
 }

@@ -175,6 +175,14 @@ public class DummyClient{
         req.add_payload(providers,lowstars,highstars,risk,betCategory);
 
         Message resp = communicate(req);
+        
+        ArrayList<Game> games=resp.getSearchedGames();
+        for(Game g:games){
+            if(g.ifActive()){
+                System.out.println(g+"\n");
+
+            }
+        }
 
            
            
@@ -205,6 +213,8 @@ public class DummyClient{
 
         Message resp = communicate(req);
 
+        System.out.println(resp.getContext());
+
     
         
     }
@@ -232,13 +242,21 @@ public class DummyClient{
     public void printGames(){
 
         System.out.println("\n");
-
+        ArrayList<Game> games= new ArrayList<>();
         Message req = new Message(Message.action.search_games,PlayerID);
         ArrayList<String> providers = new ArrayList<>();
         providers.add("all");
         req.add_payload(providers,0,5,"all","all");
 
         Message resp = communicate(req);
+
+        games=resp.getSearchedGames();
+        for(Game g:games){
+            if(g.ifActive()){
+                System.out.println(g+"\n");
+
+            }
+        }
 
 
     }
