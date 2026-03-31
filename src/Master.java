@@ -14,7 +14,7 @@ class Master{
 
     private ServerSocket MasterSocket;
     private ArrayList<Integer> workerPorts = new ArrayList<>();
-    private Map<Integer, Socket> id = new HashMap<>();
+    private Map<Integer, ObjectOutputStream> id = new HashMap<>();
     private int count = 0;
     private final Object requestIdLock = new Object();
 
@@ -114,7 +114,7 @@ class Master{
             synchronized (requestIdLock) {
                 int currentId = count++;
                 obj.set_id(currentId);
-                id.put(currentId, socket);
+                id.put(currentId, out);
             }
         }
 
