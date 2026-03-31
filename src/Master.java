@@ -141,10 +141,10 @@ class Master{
             }
             catch (IOException e) {
 
-            }
-
-           
+            }   
         } 
+
+
 
         public void run(){
             Message response=new Message(Message.action.empty);
@@ -200,6 +200,26 @@ class Master{
                     out.flush();
                 }
                 else if(command == Message.action.reducer_resp){
+
+                    int reqId = obj.get_id();
+
+                    ObjectOutputStream managerOut;
+                    synchronized (requestIdLock) {
+                        managerOut = id.get(reqId);
+                    }
+
+                    if (managerOut != null) {
+                        try {
+                            managerOut.writeObject(obj);
+                            managerOut.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        synchronized (requestIdLock) {
+                            id.remove(reqId);
+                        }
+                    }
+
                 }               
                 
             }

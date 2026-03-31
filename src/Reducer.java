@@ -76,13 +76,13 @@ class Reducer{
         public void communicateMaster(Message responce){
             try{
                 Socket master = new Socket("localhost", master_port);
-                out = new ObjectOutputStream(master.getOutputStream());
-                in = new ObjectInputStream(master.getInputStream());
-                out.writeObject(responce);
-                out.flush();
+                ObjectOutputStream out2 = new ObjectOutputStream(master.getOutputStream());
+                ObjectInputStream in2 = new ObjectInputStream(master.getInputStream());
+                out2.writeObject(responce);
+                out2.flush();
 
-                in.close();
-                out.close();
+                in2.close();
+                out2.close();
                 master.close();
             }
             catch (IOException e) {
@@ -97,25 +97,31 @@ class Reducer{
                     int temp1 = obj.get_id();
                     ArrayList<Game> temp2 = new ArrayList<>();
                     temp2.addAll(obj.getSearchedGames());
-                    if(request_ofoworckers.containsKey(temp1)){
-                        request_ofoworckers.get(temp1).add(temp2);
-                    }
-                    else {
-                        ArrayList<ArrayList<Game>> list = new ArrayList<>();
-                        list.add(temp2);
-                        request_ofoworckers.put(temp1, list);
-                    }
-                    if(num_workers == request_ofoworckers.get(temp1).size()){
-                        Message responce = new Message(Message.action.reducer_resp);
-                        responce.set_id(temp1);
-                        ArrayList<Game> temp3 = new ArrayList<>();
-                        for(int i = 0; i < num_workers; i++){
-                            temp3.addAll(request_ofoworckers.get(temp1).get(i));
-                        }
-                        responce.setSearchedGames(temp3);
-                        communicateMaster(responce);
-                    }
 
+                    synchronized (request_ofoworckers) {
+
+                        if(request_ofoworckers.containsKey(temp1)){
+                            request_ofoworckers.get(temp1).add(temp2);
+                        }
+                        else {
+                            ArrayList<ArrayList<Game>> list = new ArrayList<>();
+                            list.add(temp2);
+                            request_ofoworckers.put(temp1, list);
+                        }
+                        if(num_workers == request_ofoworckers.get(temp1).size()){
+                            Message responce = new Message(Message.action.reducer_resp);
+                            responce.set_id(temp1);
+                            ArrayList<Game> temp3 = new ArrayList<>();
+
+                            for(int i = 0; i < num_workers; i++){
+                                temp3.addAll(request_ofoworckers.get(temp1).get(i));
+                            }
+                            
+                            responce.setSearchedGames(temp3);
+                            request_ofoworckers.remove(temp1);
+                            communicateMaster(responce);
+                        }
+                    }
                 }
                 catch (IOException e) {
 
