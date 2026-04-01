@@ -204,14 +204,14 @@ class Worker{
 
                     if (targetGame == null) {
                         responce.addContext("Game does not exist.");
-                        responce.setPayout(0.0);
+                        responce.setPayout(betAmount);
                         communicateMaster(responce);
                         return;
                     }
 
                     if (betAmount < targetGame.getMinBet() || betAmount > targetGame.getMaxBet()) {
                         responce.addContext("Bet amount is outside allowed limits.");
-                        responce.setPayout(0.0);
+                        responce.setPayout(betAmount);
                         communicateMaster(responce);
                         return;
                     }
@@ -220,7 +220,7 @@ class Worker{
 
                     if (rngData == null) {
                         responce.addContext("RNG unavailable.");
-                        responce.setPayout(0.0);
+                        responce.setPayout(betAmount);
                         communicateMaster(responce);
                         return;
                     }
@@ -230,7 +230,7 @@ class Worker{
 
                     if (!localHash.equals(rngData.getSecurityHash())) {
                         responce.addContext("Security error: invalid RNG hash.");
-                        responce.setPayout(0.0);
+                        responce.setPayout(betAmount);
                         communicateMaster(responce);
                         return;
                     }
@@ -261,7 +261,7 @@ class Worker{
                                 break;
                             default:
                                 responce.addContext("Invalid game risk level.");
-                                responce.setPayout(0.0);
+                                responce.setPayout(betAmount);
                                 communicateMaster(responce);
                                 return;
                         }
@@ -374,18 +374,26 @@ class Worker{
         }
 
         private RNG_Server.Tuple requestNumberFromRNG(String gName) {
-            try (Socket rngSocket = new Socket("localhost", 9090);
+            try (Socket rngSocket = new Socket("localhost", 9090)) {
+
                 ObjectOutputStream outRNG = new ObjectOutputStream(rngSocket.getOutputStream());
-                ObjectInputStream inRNG = new ObjectInputStream(rngSocket.getInputStream())) {
-                
+
                 Message msg = new Message(Message.action.request_random);
                 msg.addGameName(gName);
-                
+
                 outRNG.writeObject(msg);
                 outRNG.flush();
-                
-                return (RNG_Server.Tuple) inRNG.readObject();
-            } catch (Exception e) {
+
+                ObjectInputStream inRNG = new ObjectInputStream(rngSocket.getInputStream());
+
+                RNG_Server.Tuple result = (RNG_Server.Tuple) inRNG.readObject();
+
+                inRNG.close();
+                outRNG.close();
+
+                return result;
+            } 
+            catch (Exception e) {
                 System.err.println("Worker: RNG Request failed - " + e.getMessage());
                 return null;
             }

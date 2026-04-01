@@ -1,0 +1,11 @@
+{
+  "GameName": "GoldRush",
+  "ProviderName": "NetEnt",
+  "Stars": 4.5,
+  "NoOfVotes": 210,
+  "GameLogo": "gold.png",
+  "MinBet": 1.0,
+  "MaxBet": 100.0,
+  "RiskLevel": "medium",
+  "HashKey": "gold_secret"
+}

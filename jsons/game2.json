@@ -1,0 +1,11 @@
+{
+  "GameName": "SafeSpin",
+  "ProviderName": "Microgaming",
+  "Stars": 3.8,
+  "NoOfVotes": 90,
+  "GameLogo": "safe.png",
+  "MinBet": 0.5,
+  "MaxBet": 20.0,
+  "RiskLevel": "low",
+  "HashKey": "safe_secret"
+}

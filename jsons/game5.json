@@ -1,0 +1,11 @@
+{
+  "GameName": "CoinFlip",
+  "ProviderName": "QuickGames",
+  "Stars": 3.5,
+  "NoOfVotes": 50,
+  "GameLogo": "coin.png",
+  "MinBet": 0.1,
+  "MaxBet": 5.0,
+  "RiskLevel": "low",
+  "HashKey": "coin_secret"
+}

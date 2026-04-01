@@ -92,7 +92,7 @@ public class Game implements Serializable{
         return providerId;
     }
     public double getStars(){
-        return Stars;
+        return Math.round(Stars * 100.0) / 100.0;
     }
     public int getNoOfVotes(){
         return NoOfVotes;
@@ -167,7 +167,7 @@ public class Game implements Serializable{
     }
 
     public String toString(){
-        String temp=gameName+"  "+Stars;
+        String temp=gameName+"  "+getStars()+"\nminBet: "+MinBet+"  maxBet: "+MaxBet+"\nProvider: "+providerId+"\n";
         return temp;
     }
 

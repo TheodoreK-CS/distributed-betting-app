@@ -1,0 +1,11 @@
+{
+  "GameName": "HighRoller",
+  "ProviderName": "PlayTech",
+  "Stars": 4.9,
+  "NoOfVotes": 500,
+  "GameLogo": "high.png",
+  "MinBet": 5.0,
+  "MaxBet": 500.0,
+  "RiskLevel": "high",
+  "HashKey": "high_secret"
+}

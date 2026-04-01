@@ -48,11 +48,12 @@ public class DummyClient{
         PlayerID = scanner.next();
         scanner.nextLine();
         //Start of a while loop that continues till the player exits
+        printGames();
         while(true){
             //Player Option Choice
-            System.out.println("Balance: "+ balance+"\n");
+            System.out.println("\nBalance: "+ balance+"\n");
             System.out.println("1. Search Games.");
-            System.out.println("2.  Play Game.");
+            System.out.println("2. Play Game.");
             System.out.println("3. Add balance.");
             System.out.println("4. Review.");
             System.out.println("5. Refresh.");
@@ -101,7 +102,7 @@ public class DummyClient{
 
     public void review(){
 
-        System.out.println("Give store name.");
+        System.out.println("Give game name.");
         String GameName = scanner.nextLine();
         System.out.println("Give rating.");
         double rating = scanner.nextDouble();
@@ -116,6 +117,8 @@ public class DummyClient{
         Message resp = communicate(req);
 
         System.out.println(resp.getContext());
+
+        printGames();
 
     }
 
@@ -203,22 +206,27 @@ public class DummyClient{
         //Bet Amount -----
         double BetAmount = -1;
         while(BetAmount <= 0 || BetAmount > balance){
-            System.out.println("Please input bet amount");
+            System.out.println("Please input bet amount or press 0 to cancel bet");
             BetAmount = scanner.nextDouble();
             scanner.nextLine();
+            if(BetAmount==0){
+                break;
+            }
         }
+        if(BetAmount!=0){
+            Message req = new Message(Message.action.play_bet,PlayerID);
 
-        Message req = new Message(Message.action.play_bet,PlayerID);
+            req.add_payload(GameName, BetAmount);
 
-        req.add_payload(GameName, BetAmount);
+            Message resp = communicate(req);
 
-        Message resp = communicate(req);
+            balance = balance - BetAmount + resp.getPayout();
 
-        balance = balance - BetAmount + resp.getPayout();
-
-        System.out.println(resp.getContext());
-        System.out.println("New balance: " + balance);
-
+            System.out.println(resp.getContext());
+            
+            System.out.println("New balance: " + balance);
+        }
+        printGames();
     
         
     }
@@ -238,7 +246,9 @@ public class DummyClient{
 
         scanner.nextLine(); //scanner command so it keeps working properly after .nextInt()
 
-        balance=balance+x;       
+        balance=balance+x;    
+        
+        printGames();
                                  
     }
 
