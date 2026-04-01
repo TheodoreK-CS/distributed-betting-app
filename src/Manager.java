@@ -43,7 +43,7 @@ public class Manager {
         while(true){
 
             System.out.println("1. Insert Game.");
-            System.out.println("2.  Remove Game.");
+            System.out.println("2. Remove Game.");
             System.out.println("3. Update Risk.");
             System.out.println("4. Statistics.");
             System.out.println("5. Exit.");
