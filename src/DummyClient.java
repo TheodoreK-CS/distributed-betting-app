@@ -151,7 +151,7 @@ public class DummyClient{
         }
 
         //Risk -----
-        String risk = "all";
+        String risk = "";
         while(!risk.equals("low") && !risk.equals("medium") && !risk.equals("high") && !risk.equals("all")){
             System.out.println("Please choose your risk (low,medium,high,all): ");
             risk = scanner.nextLine();
@@ -163,7 +163,7 @@ public class DummyClient{
         
 
         //Bet Category -----
-        String betCategory = "all";
+        String betCategory = "";
         while(!betCategory.equals("$") && !betCategory.equals("$$") && !betCategory.equals("$$$")&& !betCategory.equals("all")){
             System.out.println("Please choose a bet category ($, $$, $$$, all): ");
             betCategory = scanner.nextLine();
