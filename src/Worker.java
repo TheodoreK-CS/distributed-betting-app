@@ -187,35 +187,101 @@ class Worker{
                 else if(command == Message.action.play_bet){
 
                     String gName = obj.get_name();
-    
-                    RNG_Server.Tuple rngData = requestNumberFromRNG(gName);
-                    
-                    if(rngData != null) {
+                    double betAmount = obj.get_betAmount();
 
-                        String secretKey = "";
-                        synchronized (gameListLock) {
-                            for (Game g : game_list) {
-                                if (g.getGameName().equals(gName)) {
-                                    secretKey = g.getSafetyNumber();
-                                    break;
-                                }
+                    Game targetGame = null;
+
+                    synchronized (gameListLock) {
+                        for (Game g : game_list) {
+                            if (g.getGameName().equals(gName) && g.ifActive()) {
+                                targetGame = g;
+                                break;
                             }
-                        }
-
-
-                        String dataToVerify = rngData.getWinningNumber() + secretKey;
-                        String localHash = calculateSHA256(dataToVerify);
-
-
-                        if(localHash.equals(rngData.getSecurityHash())) {
-                            System.out.println("SECURITY CHECK PASSED: Number " + rngData.getWinningNumber() + " is authentic.");
-                            
-                        } else {
-                            System.err.println("SECURITY ALERT: TAMPERING DETECTED! Hashes do not match.");
                         }
                     }
 
+                    responce = new Message(command, obj.getPlayerId());
+
+                    if (targetGame == null) {
+                        responce.addContext("Game does not exist.");
+                        responce.setPayout(0.0);
+                        communicateMaster(responce);
+                        return;
+                    }
+
+                    if (betAmount < targetGame.getMinBet() || betAmount > targetGame.getMaxBet()) {
+                        responce.addContext("Bet amount is outside allowed limits.");
+                        responce.setPayout(0.0);
+                        communicateMaster(responce);
+                        return;
+                    }
+
+                    RNG_Server.Tuple rngData = requestNumberFromRNG(gName);
+
+                    if (rngData == null) {
+                        responce.addContext("RNG unavailable.");
+                        responce.setPayout(0.0);
+                        communicateMaster(responce);
+                        return;
+                    }
+
+                    String dataToVerify = rngData.getWinningNumber() + targetGame.getSafetyNumber();
+                    String localHash = calculateSHA256(dataToVerify);
+
+                    if (!localHash.equals(rngData.getSecurityHash())) {
+                        responce.addContext("Security error: invalid RNG hash.");
+                        responce.setPayout(0.0);
+                        communicateMaster(responce);
+                        return;
+                    }
+
+                    double[] low =    {0.0, 0.0, 0.0, 0.1, 0.5, 1.0, 1.1, 1.3, 2.0, 2.5};
+                    double[] medium = {0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 1.5, 2.5, 3.5};
+                    double[] high =   {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 2.0, 6.5};
+
+                    int winningNumber = rngData.getWinningNumber();
+                    double payout = 0.0;
+
+                    if (winningNumber % 100 == 0) {
+                        payout = betAmount * targetGame.getJackpot();
+                    } 
+                    else {
+                        int idx = winningNumber % 10;
+                        double multiplier = 0.0;
+
+                        switch (targetGame.getRiskLevel()) {
+                            case "low":
+                                multiplier = low[idx];
+                                break;
+                            case "medium":
+                                multiplier = medium[idx];
+                                break;
+                            case "high":
+                                multiplier = high[idx];
+                                break;
+                            default:
+                                responce.addContext("Invalid game risk level.");
+                                responce.setPayout(0.0);
+                                communicateMaster(responce);
+                                return;
+                        }
+
+                        payout = betAmount * multiplier;
+                    }
+
+                    synchronized (gameListLock) {
+                        targetGame.change_profit(betAmount - payout);
+                    }
+
+                    responce.setPayout(payout);
+                    responce.addContext(
+                        "Bet completed. Winning number: " + winningNumber +
+                        ", payout: " + payout
+                    );
+                    communicateMaster(responce);
                 }
+
+                
                 else if(command == Message.action.change_game){
                     boolean changed = false;
 

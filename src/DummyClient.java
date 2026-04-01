@@ -214,7 +214,10 @@ public class DummyClient{
 
         Message resp = communicate(req);
 
+        balance = balance - BetAmount + resp.getPayout();
+
         System.out.println(resp.getContext());
+        System.out.println("New balance: " + balance);
 
     
         

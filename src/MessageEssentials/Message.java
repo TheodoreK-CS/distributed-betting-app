@@ -13,7 +13,7 @@ public class Message implements Serializable{
     private String playerId;
     private String gameName, Risk, Category;
     private Game game;
-    private double stars,LowStars,HighStars,betAmount,minBet,maxBet;
+    private double stars,LowStars,HighStars,betAmount,minBet,maxBet, payout;;
     private String context;
     private ArrayList<Game> games = new ArrayList<>();
     private ArrayList<String> Providers = new ArrayList<>();
@@ -182,5 +182,12 @@ public class Message implements Serializable{
     }
     public Double get_betAmount(){
         return betAmount;
+    }
+    public void setPayout(double payout){
+    this.payout = payout;
+    }
+
+    public double getPayout(){
+        return payout;
     }
 }
