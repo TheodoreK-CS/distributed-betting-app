@@ -20,30 +20,32 @@ public class Producer extends Thread{
     @Override
     public void run(){
 
-        while (true){
-            //generate random number
-            int winningNumber = secureRandom.nextInt(100);
+        while (!Thread.interrupted()){
+            try {
+                //generate random number
+                int winningNumber = secureRandom.nextInt(100);
 
-            //combine number and secret to get them ready for hashing
-            String rawData = winningNumber + secretS;
-                
-            //hash
-            String hash = calculateSHA256(rawData);
-                
-            //put number and hash in tuple
-            Tuple pair = new Tuple(winningNumber, hash);
-                
-            //put tuple in buffer in last place
-            buffer.put(pair);
-                
-        
+                //combine number and secret to get them ready for hashing
+                String rawData = winningNumber + secretS;
+                    
+                //hash
+                String hash = calculateSHA256(rawData);
+                    
+                //put number and hash in tuple
+                Tuple pair = new Tuple(winningNumber, hash);
+                    
+                //put tuple in buffer in last place
+                buffer.put(pair);
+            }catch (Exception e) {
+                break;
+            }
         }
     }
 
 
     private String calculateSHA256(String input) {
         try {
-            //get sha-256 algorithm
+            //get sha256 algorithm
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             //use algorithm on the bytes and put them in a byte array
             byte[] hashBytes = digest.digest(input.getBytes());

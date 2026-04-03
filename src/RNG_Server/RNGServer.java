@@ -9,53 +9,76 @@ import MessageEssentials.Message;
 
 public class RNGServer {
 
-    // 1. The Shared Dictionary (Outside of main, perfectly legal!)
+    //list of buffers using game name as a key for each buffer
     private static final HashMap<String, Buffer> gameBuffers = new HashMap<>();
+
+    //list of producer threads
+    private static final HashMap<String, Thread> activeThreads = new HashMap<>();
 
     public static void main(String[] args) {
         
         System.out.println("RNG Server booted. Awaiting Workers...");
 
-        // 2. Open the main network gate on port 9090
+        //open socket
         try (ServerSocket serverSocket = new ServerSocket(9090)) {
             
-            // 3. The infinite traffic cop loop
+            //start continuous loop
             while (true) {
+
+                //accept any client
                 Socket clientSocket = serverSocket.accept();
+
+                //open input stream
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
-                // 1. Read the incoming Message
+                //read message
                 Message incomingMessage = (Message) in.readObject();
 
-                // 2. Figure out WHAT the Worker wants to do
-                Message.action action = incomingMessage.getMessageAction(); // (Swap this with your actual method)
+                //check what worker want to do
+                Message.action action = incomingMessage.getMessageAction();
 
+                //if new random generator for game
                 if (action == Message.action.init_random) {
-                    // --- PHASE 1: INITIALIZATION ---
+
+                    //use setupNewGame method to make a buffer for the game if it doesn't already have one
                     Game game = (Game) incomingMessage.get_game();
                     setupNewGame(game);
+                    //close the connection
                     clientSocket.close(); 
                     
-                } else if (action == Message.action.request_random) {
-                    // --- PHASE 2: HAND OUT A NUMBER ---
+                }
+                //if worker is asking for a random number
+                else if (action == Message.action.request_random) {
+                    //use provideNumber method to give 
                     provideNumber(incomingMessage, clientSocket);
 
-                } else if (action == Message.action.delete_random) {
-                    // --- PHASE 3: CLEANUP ---
-                    // Extract the name from the message envelope
+                }
+                //if worker wants to delete the buffer
+                else if (action == Message.action.delete_random) {
+                    //get name of game that needs it's buffer deleted
                     String gameNameToRemove = incomingMessage.get_name();
 
+                    //check producer list to find producer of this buffer
+                    Thread producerToStop = activeThreads.remove(gameNameToRemove);
+
+                    //if the producer exists
+                    if (producerToStop != null){
+                        //interrupt the producer
+                        producerToStop.interrupt();
+                    }
+
+                    //stop other threads from accesing buffer list
                     synchronized (gameBuffers) {
+                        //if buffer for game exists
                         if (gameBuffers.containsKey(gameNameToRemove)) {
-                            // Removing from the HashMap stops new Consumers from finding it.
-                            // The Producer for this buffer will eventually stop because 
-                            // it will no longer be reachable.
+                            //remove buffer from the list of buffers
                             gameBuffers.remove(gameNameToRemove);
                             System.out.println("CLEANUP: Buffer and Producer removed for " + gameNameToRemove);
                         } else {
                             System.out.println("CLEANUP: No active buffer found for " + gameNameToRemove);
                         }
                     }
+                    //close the connection
                     clientSocket.close();
                 }
             }
@@ -68,35 +91,36 @@ public class RNGServer {
 
     private static void provideNumber(Message incomingMessage, Socket clientSocket) {
         try {
-            // 1. Open the envelope to find out WHICH game needs a number
             //get the game name from payload
             String gameName = incomingMessage.get_name();
             
             Buffer targetBuffer = null;
 
-            // 2. Check our dictionary to find the assembly line for this game
+            //stop other threads from accessing buffer list
             synchronized (gameBuffers) {
+                //check the buffer list to find if the game's buffer
                 targetBuffer = gameBuffers.get(gameName);
             }
 
-            // 3. Did we find it?
+            //if a buffer for the game exists
             if (targetBuffer != null) {
                 System.out.println("Buffer found for '" + gameName + "'. Dispatching Consumer...");
                 
-                // Hand the specific Buffer and the Worker's open phone line to the Consumer
+                //make a consumer and give it the connection and the buffer to hand random number to worker
                 Consumer consumer = new Consumer(targetBuffer, clientSocket);
                 consumer.start();
                 
-            } else {
-                // ERROR: The Master server forgot to send an INIT message for this game first!
+            }
+            //if buffer for the game doesn't exist 
+            else {
                 System.err.println("CRITICAL: Worker requested a number for uninitialized game: " + gameName);
                 
-                // Hang up the phone immediately so the Worker doesn't wait forever
+                //close the connection
                 clientSocket.close(); 
             }
         } catch (Exception e){
             System.err.println("Error while trying to provide a number: " + e.getMessage());
-            // Always cleanly close the socket if something crashes
+            //close connection if something goes wrong
             try { clientSocket.close(); } catch (Exception ex) {}
         }
     }
@@ -105,24 +129,29 @@ public class RNGServer {
         String gameName = game.getGameName();
         String gameSecret = game.getSafetyNumber();
 
-        // 2. Lock the dictionary so multiple threads don't trip over each other
+        //stop other threads from accesing buffer list
         synchronized (gameBuffers) {
             
-            // 3. Check if we already built an assembly line for this game
+            //check if buffer for this game already exists
             if (gameBuffers.containsKey(gameName)) {
                 System.out.println("Game '" + gameName + "' is already running. No new buffer needed.");
             } else {
                 System.out.println("Initializing new assembly line for: " + gameName);
                 
-                // 4. Build the new storage box (capacity of 10)
+                //make buffer for the game
                 Buffer newBuffer = new Buffer();
                 
-                // 5. Put the new buffer in the dictionary so Workers can find it later
+                //put the buffer in the list with the game name as a key
                 gameBuffers.put(gameName, newBuffer);
                 
-                // 6. Hire the Producer, hand it the secret key, and turn it on!
+                //make a producer for the buffer, give it the secret number for the sha256
                 Producer producer = new Producer(newBuffer, gameSecret);
+
+                //start the producer thread
                 producer.start();
+
+                //add new producer thread to producer list
+                activeThreads.put(gameName, producer);
                 
                 System.out.println("Successfully started Producer for '" + gameName + "'.");
             }
