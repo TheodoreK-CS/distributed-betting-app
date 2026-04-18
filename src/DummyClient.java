@@ -1,8 +1,8 @@
-import java.net.Socket;
-import java.io.*;
-import java.util.Scanner;
-import java.util.ArrayList;
 import MessageEssentials.*;
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class DummyClient{
@@ -44,9 +44,25 @@ public class DummyClient{
         
             
 
-        System.out.println("Welcome player, please input your ID");
-        PlayerID = scanner.next();
-        scanner.nextLine();
+        while (true) {
+            String tempId="";
+            while(true){
+                System.out.println("Welcome player, please input your ID");
+                tempId = scanner.nextLine();
+                if(!tempId.equals("")){
+                    break;
+                }
+            }
+            Message req = new Message(Message.action.check_player_id, tempId);
+            Message resp = communicate(req);
+
+            if ("ID accepted".equals(resp.getContext())) {
+                PlayerID = tempId;
+                break;
+            } else {
+                System.out.println("This ID already exists. Please choose another one.");
+            }
+        }
         //Start of a while loop that continues till the player exits
         printGames();
         while(true){

@@ -1,3 +1,6 @@
+import MessageEssentials.Game;
+import MessageEssentials.Message;
+import MessageEssentials.PlayerStats;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,10 +9,11 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import MessageEssentials.Game;
-import MessageEssentials.Message;
-import java.lang.Runnable;
+
+
 
 class Worker{
 
@@ -17,6 +21,8 @@ class Worker{
     private ArrayList<Game> game_list = new ArrayList<>();
     private int reducerPort ;
     private final Object gameListLock = new Object();
+    private Map<String, PlayerStats> playerStatsMap = new HashMap<>();
+    private final Object playerStatsLock = new Object();
 
     public Worker(int port, int reducer_ports) throws IOException{  
         WorkerSocket = new ServerSocket(port);
@@ -272,7 +278,15 @@ class Worker{
                     synchronized (gameListLock) {
                         targetGame.change_profit(betAmount - payout);
                     }
-
+                    synchronized (playerStatsLock) {
+                        if (playerStatsMap.containsKey(obj.getPlayerId())) {
+                            playerStatsMap.get(obj.getPlayerId()).updateNet(betAmount, payout);
+                        } else {
+                            PlayerStats newPlayer = new PlayerStats(obj.getPlayerId());
+                            newPlayer.updateNet(betAmount, payout);
+                            playerStatsMap.put(obj.getPlayerId(), newPlayer);
+                        }
+                    }
                     responce.setPayout(payout);
                     responce.addContext(
                         "Bet completed. Winning number: " + winningNumber +
@@ -321,7 +335,16 @@ class Worker{
                     communicateReducer(reducerMessage);
                 }
                 else if(command == Message.action.player_profit){
-                    /// player id missing ??????????????????????????????????????????
+                    ArrayList<PlayerStats> snapshot = new ArrayList<>();
+
+                    synchronized (playerStatsLock) {
+                        snapshot.addAll(playerStatsMap.values());
+                    }
+
+                    Message reducerMessage = new Message(command);
+                    reducerMessage.setPlayerStatsList(snapshot);
+                    reducerMessage.set_id(obj.get_id());
+                    communicateReducer(reducerMessage);
                 }
                 else if(command == Message.action.review_game){
                     boolean reviewed = false;

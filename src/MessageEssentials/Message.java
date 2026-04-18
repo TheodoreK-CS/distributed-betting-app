@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
+
 public class Message implements Serializable{
 
     //custom object id so transfer doesn't crash because of small changes in the Message class
@@ -17,6 +18,7 @@ public class Message implements Serializable{
     private String context;
     private ArrayList<Game> games = new ArrayList<>();
     private ArrayList<String> Providers = new ArrayList<>();
+    private ArrayList<PlayerStats> playerStatsList = new ArrayList<>();
 
 
     public enum action {
@@ -64,6 +66,10 @@ public class Message implements Serializable{
         empty,
 
         reducer_resp,
+
+        check_player_id,
+
+        register_player_id,
     }
 
     private action message_action;
@@ -189,5 +195,12 @@ public class Message implements Serializable{
 
     public double getPayout(){
         return payout;
+    }
+    public void setPlayerStatsList(ArrayList<PlayerStats> playerStatsList) {
+        this.playerStatsList = playerStatsList;
+    }
+
+    public ArrayList<PlayerStats> getPlayerStatsList() {
+        return playerStatsList;
     }
 }

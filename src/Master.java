@@ -5,7 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import MessageEssentials.Message;
 import java.lang.Runnable;
@@ -17,6 +19,8 @@ class Master{
     private Map<Integer, ObjectOutputStream> id = new HashMap<>();
     private int count = 0;
     private final Object requestIdLock = new Object();
+    private Set<String> registeredPlayerIds = new HashSet<>();
+    private final Object playerIdLock = new Object();
 
 
     public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
@@ -167,7 +171,23 @@ class Master{
                     out.flush();
 
                 }
-                else if(command == Message.action.search_games){
+                else if(command == Message.action.check_player_id){
+                    String requestedId = obj.getPlayerId();
+                    response = new Message(Message.action.check_player_id);
+
+                    synchronized (playerIdLock) {
+                        if (registeredPlayerIds.contains(requestedId)) {
+                            response.addContext("ID already exists");
+                        } else {
+                            registeredPlayerIds.add(requestedId);
+                            response.addContext("ID accepted");
+                        }
+                    }
+
+                    out.writeObject(response);
+                    out.flush();
+                }
+                                else if(command == Message.action.search_games){
                     communicate_all();
                 }
                 else if(command == Message.action.play_bet){

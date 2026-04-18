@@ -188,7 +188,17 @@ public class Manager {
         else if (choice.equals("2")){
             Message req = new Message(Message.action.player_profit);
             Message resp = communicate(req);
-            //player id missing????????????????????????????????????????????????
+
+            ArrayList<PlayerStats> players = resp.getPlayerStatsList();
+
+            if (players.isEmpty()) {
+                System.out.println("No player stats available.");
+            } else {
+                for (PlayerStats p : players) {
+                    System.out.println(p.toString());
+                }
+                System.out.println();
+            }
         }
         else {
             System.out.println("Invalid choice.");

@@ -1,4 +1,7 @@
 
+import MessageEssentials.Game;
+import MessageEssentials.Message;
+import MessageEssentials.PlayerStats;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,16 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import MessageEssentials.Game;
-import MessageEssentials.Message;
-import java.lang.Runnable;
-
 
 class Reducer{
 
     private ServerSocket ReducerSocket;
     private int num_workers,master_port;
     private Map<Integer, ArrayList<ArrayList<Game>>> request_ofoworckers = new HashMap<>(); 
+    private Map<Integer, ArrayList<ArrayList<PlayerStats>>> player_requests = new HashMap<>();
     
     public Reducer(int port, int master_port, int num_workers) throws IOException{
         ReducerSocket = new ServerSocket(port);
@@ -91,44 +91,71 @@ class Reducer{
         }
 
 
-        public void run(){
-                try {
-                    Message obj = (Message) in.readObject();
-                    int temp1 = obj.get_id();
+       public void run(){
+            try {
+                Message obj = (Message) in.readObject();
+                int reqId = obj.get_id();
+
+                if (obj.getMessageAction() == Message.action.player_profit) {
+                    ArrayList<PlayerStats> temp = new ArrayList<>(obj.getPlayerStatsList());
+
+                    synchronized (player_requests) {
+                        if (player_requests.containsKey(reqId)) {
+                            player_requests.get(reqId).add(temp);
+                        } else {
+                            ArrayList<ArrayList<PlayerStats>> list = new ArrayList<>();
+                            list.add(temp);
+                            player_requests.put(reqId, list);
+                        }
+
+                        if (num_workers == player_requests.get(reqId).size()) {
+                            Message response = new Message(Message.action.reducer_resp);
+                            response.set_id(reqId);
+
+                            ArrayList<PlayerStats> merged = new ArrayList<>();
+                            for (int i = 0; i < num_workers; i++) {
+                                merged.addAll(player_requests.get(reqId).get(i));
+                            }
+
+                            response.setPlayerStatsList(merged);
+                            player_requests.remove(reqId);
+                            communicateMaster(response);
+                        }
+                    }
+                } else {
                     ArrayList<Game> temp2 = new ArrayList<>();
                     temp2.addAll(obj.getSearchedGames());
 
                     synchronized (request_ofoworckers) {
-
-                        if(request_ofoworckers.containsKey(temp1)){
-                            request_ofoworckers.get(temp1).add(temp2);
+                        if(request_ofoworckers.containsKey(reqId)){
+                            request_ofoworckers.get(reqId).add(temp2);
                         }
                         else {
                             ArrayList<ArrayList<Game>> list = new ArrayList<>();
                             list.add(temp2);
-                            request_ofoworckers.put(temp1, list);
+                            request_ofoworckers.put(reqId, list);
                         }
-                        if(num_workers == request_ofoworckers.get(temp1).size()){
+
+                        if(num_workers == request_ofoworckers.get(reqId).size()){
                             Message responce = new Message(Message.action.reducer_resp);
-                            responce.set_id(temp1);
+                            responce.set_id(reqId);
                             ArrayList<Game> temp3 = new ArrayList<>();
 
                             for(int i = 0; i < num_workers; i++){
-                                temp3.addAll(request_ofoworckers.get(temp1).get(i));
+                                temp3.addAll(request_ofoworckers.get(reqId).get(i));
                             }
-                            
+
                             responce.setSearchedGames(temp3);
-                            request_ofoworckers.remove(temp1);
+                            request_ofoworckers.remove(reqId);
                             communicateMaster(responce);
                         }
                     }
                 }
-                catch (IOException e) {
-
-                }
-                catch (ClassNotFoundException e) {
-
-                }
+            }
+            catch (IOException e) {
+            }
+            catch (ClassNotFoundException e) {
+            }
         }
     }
 
