@@ -25,6 +25,7 @@ public class Manager {
     public Manager(String master_ip, int master_port){
         this.master_ip = master_ip;
         this.master_port = master_port;
+        scanner = new Scanner(System.in);
         try{
             master=new Socket("localhost",master_port);
             out = new ObjectOutputStream(master.getOutputStream());
