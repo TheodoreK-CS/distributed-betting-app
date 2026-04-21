@@ -1,11 +1,11 @@
 package RNG_Server;
 
+
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.Buffer;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 import MessageEssentials.Game;
 import MessageEssentials.Message;
@@ -13,7 +13,7 @@ import MessageEssentials.Message;
 public class RNGServer {
 
     //list of buffers using game name as a key for each buffer
-    private static final HashMap<String, Buffer> gameBuffers = new HashMap<>();
+    private static final HashMap<String, RNG_Server.Buffer> gameBuffers = new HashMap<>();
 
     //list of producer threads
     private static final HashMap<String, Thread> activeThreads = new HashMap<>();
@@ -97,7 +97,7 @@ public class RNGServer {
             //get the game name from payload
             String gameName = incomingMessage.get_name();
             
-            Buffer targetBuffer = null;
+            RNG_Server.Buffer targetBuffer = null;
 
             //stop other threads from accessing buffer list
             synchronized (gameBuffers) {
@@ -110,7 +110,7 @@ public class RNGServer {
                 System.out.println("Buffer found for '" + gameName + "'. Dispatching Consumer...");
                 
                 //make a consumer and give it the connection and the buffer to hand random number to worker
-                Consumer consumer = new Consumer(targetBuffer, clientSocket);
+                RNG_Server.Consumer consumer = new RNG_Server.Consumer(targetBuffer, clientSocket);
                 consumer.start();
                 
             }
@@ -142,7 +142,7 @@ public class RNGServer {
                 System.out.println("Initializing new assembly line for: " + gameName);
                 
                 //make buffer for the game
-                Buffer newBuffer = new Buffer();
+                RNG_Server.Buffer newBuffer = new RNG_Server.Buffer();
                 
                 //put the buffer in the list with the game name as a key
                 gameBuffers.put(gameName, newBuffer);

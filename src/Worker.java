@@ -390,7 +390,7 @@ class Worker{
         }
 
         private void contactRNG(Object payload, Message.action rngAction) {
-            try (Socket rngSocket = new Socket(rng_ip, rng_ip);
+            try (Socket rngSocket = new Socket(rng_ip, rng_port);
                 ObjectOutputStream outRNG = new ObjectOutputStream(rngSocket.getOutputStream())) {
                 
                 Message msg = new Message(rngAction);
