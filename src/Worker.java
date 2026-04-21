@@ -16,24 +16,36 @@ import java.util.Map;
 
 
 class Worker{
-
+   
     private ServerSocket WorkerSocket;
     private ArrayList<Game> game_list = new ArrayList<>();
     private int reducerPort ;
     private final Object gameListLock = new Object();
     private Map<String, PlayerStats> playerStatsMap = new HashMap<>();
     private final Object playerStatsLock = new Object();
+    private String reducer_ip;
+    private String rng_ip;
+    private int rng_port;
 
-    public Worker(int port, int reducer_ports) throws IOException{  
+
+    public Worker(int port, String reducer_ip ,int reducer_port,String rng_ip,int rng_port) throws IOException{  
         WorkerSocket = new ServerSocket(port);
-        this.reducerPort = reducer_ports;
+        this.reducerPort = reducer_port;
+        this.reducer_ip=reducer_ip;
+        this.rng_ip=rng_ip;
+        this.rng_port=rng_port;
     }
 
     public static void main(String args[]){
         try{
-            int reducer_port = Integer.parseInt(args[1]);
+            
             int port = Integer.parseInt(args[0]);
-            Worker worker = new Worker(port,reducer_port);
+            String reducer_ip = args[1];
+            int reducer_port = Integer.parseInt(args[2]);
+            String rng_ip = args[3];
+            int rng_port = Integer.parseInt(args[4]);
+
+            Worker worker = new Worker(port, reducer_ip, reducer_port, rng_ip, rng_port);
             worker.begin();
 
         }
@@ -83,7 +95,7 @@ class Worker{
 
             try{
 
-                Socket reducer = new Socket("localhost",reducerPort);
+                Socket reducer = new Socket(reducer_ip,reducerPort);
                 ObjectOutputStream reducerOut = new ObjectOutputStream(reducer.getOutputStream());
                 ObjectInputStream reducerIn = new ObjectInputStream(reducer.getInputStream());
 
@@ -378,7 +390,7 @@ class Worker{
         }
 
         private void contactRNG(Object payload, Message.action rngAction) {
-            try (Socket rngSocket = new Socket("localhost", 9090);
+            try (Socket rngSocket = new Socket(rng_ip, rng_ip);
                 ObjectOutputStream outRNG = new ObjectOutputStream(rngSocket.getOutputStream())) {
                 
                 Message msg = new Message(rngAction);

@@ -1,3 +1,4 @@
+import MessageEssentials.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,9 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import MessageEssentials.Message;
-import java.lang.Runnable;
-
 class Master{
 
     private ServerSocket MasterSocket;
@@ -21,21 +19,27 @@ class Master{
     private final Object requestIdLock = new Object();
     private Set<String> registeredPlayerIds = new HashSet<>();
     private final Object playerIdLock = new Object();
+    private ArrayList<String> workerIPs = new ArrayList<>();
 
 
-    public Master(int port,ArrayList<Integer> worker_ports) throws IOException{  
+    public Master(int port, ArrayList<String> workerIPs, ArrayList<Integer> worker_ports) throws IOException{  
         MasterSocket = new ServerSocket(port);
         this.workerPorts = worker_ports;
+        this.workerIPs=workerIPs;
     }
 
     public static void main(String args[]){
         try{
             ArrayList<Integer> worker_ports = new ArrayList<Integer>(); 
-            for (int i = 1; i < args.length; i++){
-                worker_ports.add(Integer.parseInt(args[i]));
-            }
+            ArrayList<String> worker_ips = new ArrayList<String>(); 
             int port = Integer.parseInt(args[0]);
-            Master master = new Master(port,worker_ports);
+
+            for (int i = 1; i < args.length; i += 2){
+                worker_ips.add(args[i]);
+                worker_ports.add(Integer.parseInt(args[i+1]));
+            }
+           
+            Master master = new Master(port,worker_ips,worker_ports);
             master.begin();
 
 
@@ -90,7 +94,7 @@ class Master{
 
             Message response = new Message(Message.action.empty);
             try{
-                Socket worker = new Socket("localhost",workerPorts.get(temp));
+                Socket worker = new Socket(workerIPs.get(temp),workerPorts.get(temp));
 
                 ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
                 ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());

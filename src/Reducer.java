@@ -18,19 +18,23 @@ class Reducer{
     private int num_workers,master_port;
     private Map<Integer, ArrayList<ArrayList<Game>>> request_ofoworckers = new HashMap<>(); 
     private Map<Integer, ArrayList<ArrayList<PlayerStats>>> player_requests = new HashMap<>();
+    private String master_ip;
+
     
-    public Reducer(int port, int master_port, int num_workers) throws IOException{
+    public Reducer(int port,String master_ip, int master_port, int num_workers) throws IOException{
         ReducerSocket = new ServerSocket(port);
         this.num_workers = num_workers;
         this.master_port = master_port;
+        this.master_ip=master_ip;
     }
 
     public static void main(String args[]){
         try{
-            int master_port = Integer.parseInt(args[1]);
             int port = Integer.parseInt(args[0]);
-            int num_workers = Integer.parseInt(args[2]);
-            Reducer reducer = new Reducer(port, master_port, num_workers);
+            String master_ip = args[1];
+            int master_port = Integer.parseInt(args[2]);
+            int num_workers = Integer.parseInt(args[3]);
+            Reducer reducer = new Reducer(port, master_ip, master_port,num_workers);
             reducer.begin();
         }
         catch(IOException e){
@@ -75,7 +79,7 @@ class Reducer{
 
         public void communicateMaster(Message responce){
             try{
-                Socket master = new Socket("localhost", master_port);
+                Socket master = new Socket(master_ip, master_port);
                 ObjectOutputStream out2 = new ObjectOutputStream(master.getOutputStream());
                 ObjectInputStream in2 = new ObjectInputStream(master.getInputStream());
                 out2.writeObject(responce);

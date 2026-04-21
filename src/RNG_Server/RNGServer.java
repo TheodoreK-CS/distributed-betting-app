@@ -3,7 +3,10 @@ package RNG_Server;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.HashMap;
+import java.util.function.Consumer;
+
 import MessageEssentials.Game;
 import MessageEssentials.Message;
 
@@ -16,11 +19,11 @@ public class RNGServer {
     private static final HashMap<String, Thread> activeThreads = new HashMap<>();
 
     public static void main(String[] args) {
-        
+        int port = Integer.parseInt(args[0]);
         System.out.println("RNG Server booted. Awaiting Workers...");
 
         //open socket
-        try (ServerSocket serverSocket = new ServerSocket(9090)) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             
             //start continuous loop
             while (true) {

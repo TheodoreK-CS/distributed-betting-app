@@ -13,20 +13,25 @@ public class DummyClient{
     private int master_port;
     private String PlayerID;
     private double balance=0;
+    private String master_ip;
+   
 
 
 
-    public static void main(String args[])  {
-        int master_port=Integer.parseInt(args[0]);
-        DummyClient client=new DummyClient(master_port);
+    public static void main(String args[]) {
+        String master_ip = args[0];
+        int master_port = Integer.parseInt(args[1]);
+
+        DummyClient client = new DummyClient(master_ip, master_port);
         client.begin();
     }
 
-    public DummyClient(int master_port){
+    public DummyClient(String master_ip,int master_port){
+        this.master_ip = master_ip;
+        this.master_port = master_port;
         scanner = new Scanner(System.in);
-        this.master_port=master_port;
         try{
-            master=new Socket("localhost",master_port);
+            master=new Socket("master_ip",master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
             if (out != null) out.close();
@@ -296,7 +301,7 @@ public class DummyClient{
         Message res=new Message(Message.action.empty);
 
         try{
-            master=new Socket("localhost",master_port);
+            master=new Socket("master_ip",master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
 

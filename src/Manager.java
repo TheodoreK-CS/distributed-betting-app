@@ -12,17 +12,19 @@ public class Manager {
     private ObjectOutputStream out ;
 	private ObjectInputStream in ;
     private int master_port;
+    private String master_ip;
 
 
     public static void main(String args[])  {
-        int master_port=Integer.parseInt(args[0]);
-        Manager manager=new Manager(master_port);
+        int master_port=Integer.parseInt(args[1]);
+        String master_ip = args[0];
+        Manager manager=new Manager(master_ip,master_port);
         manager.begin();
     }
 
-    public Manager(int master_port){
-        scanner = new Scanner(System.in);
-        this.master_port=master_port;
+    public Manager(String master_ip, int master_port){
+        this.master_ip = master_ip;
+        this.master_port = master_port;
         try{
             master=new Socket("localhost",master_port);
             out = new ObjectOutputStream(master.getOutputStream());
@@ -213,7 +215,7 @@ public class Manager {
         Message res=new Message(Message.action.empty);
 
         try{
-            master=new Socket("localhost",master_port);
+            master=new Socket("master_ip",master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
 
