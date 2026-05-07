@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="28dp">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="72dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/rounded_button"
+            android:onClick="click_back"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back" />
+
+        <TextView
+            android:id="@+id/provider"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/color_1"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="Providers"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/back_button" />
+
+        <ImageButton
+            android:id="@+id/menu_provider_button"
+            android:layout_width="49dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/rounded_button"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/provider"
+            app:layout_constraintEnd_toEndOf="@+id/provider"
+            app:layout_constraintTop_toTopOf="@+id/provider"
+            app:srcCompat="@drawable/menu_arrow" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="0dp"
+            android:layout_height="122dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/color_1"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="Rating"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/provider" />
+
+        <ImageButton
+            android:id="@+id/plus_button1"
+            android:layout_width="41dp"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_button"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.62"
+            app:layout_constraintStart_toStartOf="@+id/rating"
+            app:layout_constraintTop_toTopOf="@+id/rating"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/plus" />
+
+        <ImageButton
+            android:id="@+id/minus_button1"
+            android:layout_width="41dp"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_button"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.62"
+            app:layout_constraintStart_toStartOf="@+id/rating"
+            app:layout_constraintTop_toTopOf="@+id/rating"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/minus" />
+
+        <ImageButton
+            android:id="@+id/plus_button2"
+            android:layout_width="41dp"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_button"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.88"
+            app:layout_constraintStart_toStartOf="@+id/rating"
+            app:layout_constraintTop_toTopOf="@+id/rating"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/plus" />
+
+        <ImageButton
+            android:id="@+id/minus_button2"
+            android:layout_width="41dp"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_button"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.88"
+            app:layout_constraintStart_toStartOf="@+id/rating"
+            app:layout_constraintTop_toTopOf="@+id/rating"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/minus" />
+
+        <TextView
+            android:id="@+id/low_stars"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:background="@color/color_2"
+            android:gravity="center"
+            android:text="0.0"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.62"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rating" />
+
+        <TextView
+            android:id="@+id/high_stars"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:background="@color/color_2"
+            android:gravity="center"
+            android:text="5.0"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="@+id/rating"
+            app:layout_constraintHorizontal_bias="0.88"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rating" />
+
+        <TextView
+            android:id="@+id/risk"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/color_1"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="Risk"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating" />
+
+        <TextView
+            android:id="@+id/risk_value"
+            android:layout_width="90dp"
+            android:layout_height="42dp"
+            android:background="@color/color_2"
+            android:gravity="center"
+            android:text="all"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/risk"
+            app:layout_constraintEnd_toStartOf="@+id/menu_risk_button"
+            app:layout_constraintTop_toTopOf="@+id/risk" />
+
+        <ImageButton
+            android:id="@+id/menu_risk_button"
+            android:layout_width="49dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/rounded_button"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/risk"
+            app:layout_constraintEnd_toEndOf="@+id/risk"
+            app:layout_constraintTop_toTopOf="@+id/risk"
+            app:srcCompat="@drawable/menu_arrow" />
+
+        <TextView
+            android:id="@+id/bet_category"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/color_1"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="Bet Category"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/risk" />
+
+        <TextView
+            android:id="@+id/bet_category_value"
+            android:layout_width="90dp"
+            android:layout_height="42dp"
+            android:background="@color/color_2"
+            android:gravity="center"
+            android:text="all"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bet_category"
+            app:layout_constraintEnd_toStartOf="@+id/menu_bet_category_button"
+            app:layout_constraintTop_toTopOf="@+id/bet_category" />
+
+        <ImageButton
+            android:id="@+id/menu_bet_category_button"
+            android:layout_width="49dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/rounded_button"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/bet_category"
+            app:layout_constraintEnd_toEndOf="@+id/bet_category"
+            app:layout_constraintTop_toTopOf="@+id/bet_category"
+            app:srcCompat="@drawable/menu_arrow" />
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="322dp"
+            android:layout_height="67dp"
+            android:layout_marginTop="32dp"
+            android:onClick="click_apply"
+            android:text="APPLY"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bet_category" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
