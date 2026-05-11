@@ -10,7 +10,7 @@ import java.util.HashMap;
 import MessageEssentials.Game;
 import MessageEssentials.Message;
 
-public class RNGServer {
+public class RNGServer{
 
     //list of buffers using game name as a key for each buffer
     private static final HashMap<String, RNG_Server.Buffer> gameBuffers = new HashMap<>();

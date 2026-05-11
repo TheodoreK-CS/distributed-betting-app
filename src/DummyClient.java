@@ -14,11 +14,8 @@ public class DummyClient{
     private String PlayerID;
     private double balance=0;
     private String master_ip;
-   
 
-
-
-    public static void main(String args[]) {
+    public static void main(String args[]){
         String master_ip = args[0];
         int master_port = Integer.parseInt(args[1]);
 
@@ -31,7 +28,7 @@ public class DummyClient{
         this.master_port = master_port;
         scanner = new Scanner(System.in);
         try{
-            master=new Socket("master_ip",master_port);
+            master=new Socket(master_ip,master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
             if (out != null) out.close();
@@ -42,13 +39,10 @@ public class DummyClient{
             System.out.println("Could not initialize app, Restart.");
             System.exit(0);
         }
-    }
-        
+    } 
 
     public void begin(){
         
-            
-
         while (true) {
             String tempId="";
             while(true){
@@ -58,6 +52,7 @@ public class DummyClient{
                     break;
                 }
             }
+
             Message req = new Message(Message.action.check_player_id, tempId);
             Message resp = communicate(req);
 
@@ -107,18 +102,16 @@ public class DummyClient{
             }
 
         }
-    scanner.close();
-    try {
-        if (out != null) out.close();
-        if (in != null) in.close();
-        if (master != null) master.close();
-        
-        
-    } 
-    catch (IOException e) {
-        e.printStackTrace();
-    } 
-            
+        scanner.close();
+        try {
+            if (out != null) out.close();
+            if (in != null) in.close();
+            if (master != null) master.close();
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
 
     public void review(){
@@ -129,7 +122,6 @@ public class DummyClient{
         double rating = scanner.nextDouble();
         scanner.nextLine();
 
-        
         Message req = new Message(Message.action.review_game,PlayerID);
 
         req.addGameName(GameName);
@@ -142,7 +134,6 @@ public class DummyClient{
         printGames();
 
     }
-
 
     //Sends out search filters to the Master
     public void search(){
@@ -181,7 +172,6 @@ public class DummyClient{
                 System.out.println("False risk choice");
             }
         }
-        
 
         //Bet Category -----
         String betCategory = "";
@@ -194,7 +184,6 @@ public class DummyClient{
             }
         }
 
-        
         Message req = new Message(Message.action.search_games,PlayerID);
 
         req.add_payload(providers,lowstars,highstars,risk,betCategory);
@@ -208,11 +197,6 @@ public class DummyClient{
 
             }
         }
-
-           
-           
-
-            
 
     }
 
@@ -301,7 +285,7 @@ public class DummyClient{
         Message res=new Message(Message.action.empty);
 
         try{
-            master=new Socket("master_ip",master_port);
+            master=new Socket(master_ip,master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
 
@@ -337,15 +321,6 @@ public class DummyClient{
 
             }
         }
-
-        
-
-
-        return res;
-        
+        return res;  
     }
 }
-
-    
-    
-

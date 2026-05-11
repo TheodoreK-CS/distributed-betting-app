@@ -131,11 +131,9 @@ class Master{
             set_req_id();
 
             try{
-                for(Integer i:workerPorts){
-                    
-                    
+                for (int i = 0; i < workerPorts.size(); i++){
 
-                    Socket worker = new Socket("localhost",i);
+                    Socket worker = new Socket(workerIPs.get(i), workerPorts.get(i));
                     ObjectOutputStream workerOut = new ObjectOutputStream(worker.getOutputStream());
                     ObjectInputStream workerIn = new ObjectInputStream(worker.getInputStream());
 

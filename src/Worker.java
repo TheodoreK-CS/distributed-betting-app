@@ -19,7 +19,7 @@ class Worker{
    
     private ServerSocket WorkerSocket;
     private ArrayList<Game> game_list = new ArrayList<>();
-    private int reducerPort ;
+    private int reducerPort;
     private final Object gameListLock = new Object();
     private Map<String, PlayerStats> playerStatsMap = new HashMap<>();
     private final Object playerStatsLock = new Object();
@@ -409,7 +409,7 @@ class Worker{
         }
 
         private RNG_Server.Tuple requestNumberFromRNG(String gName) {
-            try (Socket rngSocket = new Socket("localhost", 9090)) {
+            try (Socket rngSocket = new Socket(rng_ip, 9090)) {
 
                 ObjectOutputStream outRNG = new ObjectOutputStream(rngSocket.getOutputStream());
 
