@@ -27,7 +27,7 @@ public class Manager {
         this.master_port = master_port;
         scanner = new Scanner(System.in);
         try{
-            master=new Socket("localhost",master_port);
+            master=new Socket(master_ip,master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
             if (out != null) out.close();
@@ -87,9 +87,6 @@ public class Manager {
         } 
                 
     }
-
-
-    
 
     //Manager menu methods
 
@@ -168,12 +165,8 @@ public class Manager {
         Message resp = communicate(req);
         System.out.println(resp.getContext());
 
-
-
-
     }
 
-    
     //View Stats
     public void getStats(){
         
@@ -216,7 +209,7 @@ public class Manager {
         Message res=new Message(Message.action.empty);
 
         try{
-            master=new Socket("master_ip",master_port);
+            master=new Socket(master_ip,master_port);
             out = new ObjectOutputStream(master.getOutputStream());
             in = new ObjectInputStream(master.getInputStream());
 
@@ -247,11 +240,8 @@ public class Manager {
             }
         }
 
-        
-
-
         return res;
-        
+
     }
 
 }

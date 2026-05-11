@@ -409,7 +409,7 @@ class Worker{
         }
 
         private RNG_Server.Tuple requestNumberFromRNG(String gName) {
-            try (Socket rngSocket = new Socket(rng_ip, 9090)) {
+            try (Socket rngSocket = new Socket(rng_ip, rng_port)) {
 
                 ObjectOutputStream outRNG = new ObjectOutputStream(rngSocket.getOutputStream());
 
