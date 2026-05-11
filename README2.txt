@@ -26,3 +26,11 @@ java -cp out Worker 6002 127.0.0.1 7000 127.0.0.1 9090
 java -cp "out;lib\gson-2.10.1.jar" Manager 127.0.0.1 8000
 java -cp out DummyClient 127.0.0.1 8000
 //127.0.0.1 (Master IP), 8000 (Master Port).
+
+here are the json paths:
+jsons\game1.json
+jsons\game2.json
+jsons\game3.json
+jsons\game4.json
+jsons\game5.json
+jsons\game6.json
