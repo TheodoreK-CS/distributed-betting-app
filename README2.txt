@@ -1,6 +1,6 @@
 Before running, ensure all files are compiled into a central output folder (e.g., out).
 
-javac -cp ".;lib\gson-2.10.1.jar" -d out src\*.java
+javac -cp ".;lib\gson-2.10.1.jar" -d out src\MessageEssentials\*.java src\RNG_Server\*.java src\*.java
 
 Open a separate terminal window for each step.
 They must be started in this specific order to ensure sockets are ready to receive connections.
