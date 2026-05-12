@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import MessageEssentials;
+import MessageEssentials.Message;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -72,30 +72,29 @@ public class mainActivity extends AppCompatActivity {
             return;
         }
 
-        // Optional: Disable the button so the user can't spam-click it while waiting
+        //disable spam click
         enterButton.setEnabled(false);
 
-        // 1. Open a Background Thread for the Socket connection
         new Thread(() -> {
             try {
-                // 2. Create the exact same Message you used in DummyClient
+                //create message for server
                 Message req = new Message(Message.action.check_player_id, id);
 
-                // 3. Send it to the Master Server
+                //send to server
                 Message resp = NetworkClient.send(req);
 
-                // 4. Jump back to the Main UI Thread to update the screen
+                //go back to main thread to change ui
                 runOnUiThread(() -> {
-                    enterButton.setEnabled(true); // Re-enable the button
+                    enterButton.setEnabled(true); //re-enable the button
 
                     if ("ID accepted".equals(resp.getContext())) {
-                        // Success! Save the ID and move to the next screen
+                        //if success save id and move to next screen
                         player.setPlayerId(id);
                         Intent temp = new Intent(mainActivity.this, browse_games_activity.class);
                         temp.putExtra("player", player);
                         startActivity(temp);
                     } else {
-                        // Denied! Tell the user to pick a new one
+                        //else tell user to use different id
                         Toast.makeText(mainActivity.this, "This ID already exists. Please choose another.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -103,7 +102,7 @@ public class mainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
 
-                // If the server is offline or the connection fails, tell the user safely
+                //if server unreachable tell user
                 runOnUiThread(() -> {
                     enterButton.setEnabled(true);
                     Toast.makeText(mainActivity.this, "Failed to connect to Master Server.", Toast.LENGTH_SHORT).show();
