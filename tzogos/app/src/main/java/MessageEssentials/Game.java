@@ -2,7 +2,8 @@ package MessageEssentials;
 
 import java.io.Serializable;
 
-public class Game implements Serializable {
+public class Game implements Serializable{
+    //custom object id so transfer doesn't crash because of small changes in the Game class
     private static final long serialVersionUID = 1L;
 
     private String gameName;
@@ -17,11 +18,12 @@ public class Game implements Serializable {
     private String betCategory;
     private int jackpot;
     private Boolean is_Active = true;
+    //for rng safety
     private String HashKey;
     private String safetyNumber;
 
-    public Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath,
-                double minBet, double maxBet, String riskLevel, String safetyNumber) {
+
+    public Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
         this.gameName = gameName;
         this.providerId = providerName;
         this.Stars = stars;
@@ -31,47 +33,148 @@ public class Game implements Serializable {
         this.MaxBet = maxBet;
         this.RiskLevel = riskLevel;
         this.HashKey = safetyNumber;
-        this.safetyNumber = HashKey;
+
+        this.safetyNumber=HashKey;
+
+        //gets the bet category from calculateBetCategory method
         this.betCategory = calculateBetCategory(minBet);
+
+        //sets the jackpot of the game
         this.jackpot = calculateJackpot(riskLevel);
+
+
     }
 
-    private String calculateBetCategory(double minBet) {
-        if (minBet < 1) return "$";
-        else if (minBet < 5) return "$$";
-        else return "$$$";
+    //calculates the bet Category and returns it as "$", "$$", "$$$"
+    private String calculateBetCategory(double minBet){
+
+        //if minimum bet is 0.1 then $
+        if(minBet<1){
+            return "$";
+        }
+        //if minimum bet is 1 then $$
+        else if(minBet<5){
+            return "$$";
+        }
+        //if minimum bet is 5 then $$$
+        else{
+            return "$$$";
+        }
+
     }
 
-    private int calculateJackpot(String riskLevel) {
-        if (riskLevel.equals("low")) return 10;
-        if (riskLevel.equals("medium")) return 20;
-        if (riskLevel.equals("high")) return 40;
+    //calculates jackpot based on risk level and returns jackpot value as an int
+    private int calculateJackpot(String riskLevel){
+
+        if(riskLevel.equals("low")){
+            return 10;
+        }else if(riskLevel.equals("medium")){
+            return 20;
+        }else if(riskLevel.equals("high")){
+            return 40;
+        }
+
+        //will only return zero if riskLevel isn't properly named
         return 0;
     }
 
-    public void game_review(double star) {
+    public void game_review(double star){
+
         NoOfVotes++;
-        Stars = (Stars * (NoOfVotes - 1) + star) / NoOfVotes;
+        Stars = (Stars*(NoOfVotes-1)+star)/NoOfVotes;
     }
 
-    public String getGameName() { return gameName; }
-    public String getProviderName() { return providerId; }
-    public double getStars() { return Math.round(Stars * 100.0) / 100.0; }
-    public int getNoOfVotes() { return NoOfVotes; }
-    public String getGameLogoPath() { return GameLogo; }
-    public double getMinBet() { return MinBet; }
-    public double getMaxBet() { return MaxBet; }
-    public String getRiskLevel() { return RiskLevel; }
-    public String getSafetyNumber() { return safetyNumber; }
-    public String getBetCategory() { return betCategory; }
-    public int getJackpot() { return jackpot; }
-    public boolean ifActive() { return is_Active; }
+    //getters
+    public String getGameName(){
+        return gameName;
+    }
+    public String getProviderName(){
+        return providerId;
+    }
+    public double getStars(){
+        return Math.round(Stars * 100.0) / 100.0;
+    }
+    public int getNoOfVotes(){
+        return NoOfVotes;
+    }
+    public String getGameLogoPath(){
+        return GameLogo;
+    }
+    public double getMinBet(){
+        return MinBet;
+    }
+    public double getMaxBet(){
+        return MaxBet;
+    }
+    public String getRiskLevel(){
+        return RiskLevel;
+    }
+    public String getSafetyNumber(){
+        return safetyNumber;
+    }
+    public String getBetCategory(){
+        return betCategory;
+    }
+    public int getJackpot(){
+        return jackpot;
+    }
+    public boolean ifActive(){
+        return is_Active;
+    }
 
-    public void setActive(boolean active) { is_Active = active; }
-    public void change_profit(double x) { profit = profit + x; }
-    public double getProfit() { return profit; }
 
-    public String toString() {
-        return gameName + "  " + getStars() + "\nminBet: " + MinBet + "  maxBet: " + MaxBet + "\nProvider: " + providerId + "\n";
+    // setters
+
+    public void setGameName(String gameName){
+        this.gameName = gameName;
+    }
+
+    public void setProviderName(String providerName){
+        this.providerId = providerName;
+    }
+
+    public void setStars(double stars){
+        this.Stars = stars;
+    }
+
+    public void setNoOfVotes(int noOfVotes){
+        this.NoOfVotes = noOfVotes;
+    }
+
+    public void setGameLogoPath(String gameLogoPath){
+        this.GameLogo = gameLogoPath;
+    }
+
+    public void setMinBet(double minBet){
+        this.MinBet = minBet;
+        this.betCategory = calculateBetCategory(this.MinBet);
+    }
+
+    public void setMaxBet(double maxBet){
+        this.MaxBet = maxBet;
+    }
+
+    public void setRiskLevel(String riskLevel){
+        this.RiskLevel = riskLevel;
+        this.jackpot = calculateJackpot(this.RiskLevel);
+    }
+
+    public void setSafetyNumber(String safetyNumber){
+        this.safetyNumber = safetyNumber;
+    }
+    public void setActive(boolean is_Active){
+        this.is_Active = is_Active;
+    }
+
+    public String toString(){
+        String temp=gameName+"  "+getStars()+"\nminBet: "+MinBet+"  maxBet: "+MaxBet+"\nProvider: "+providerId+"\n";
+        return temp;
+    }
+
+    public void change_profit(double x){
+        profit=profit+x;
+    }
+    public double getProfit(){
+        return profit;
     }
 }
