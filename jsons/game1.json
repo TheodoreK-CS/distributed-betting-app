@@ -3,7 +3,7 @@
   "ProviderName": "NetEnt",
   "Stars": 4.2,
   "NoOfVotes": 120,
-  "GameLogo": "luckys.png",
+  "GameLogo": "jsons/game1.png",
   "MinBet": 1.0,
   "MaxBet": 50.0,
   "RiskLevel": "medium",

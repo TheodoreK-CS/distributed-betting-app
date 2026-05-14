@@ -3,7 +3,7 @@
   "ProviderName": "Evolution",
   "Stars": 4.7,
   "NoOfVotes": 320,
-  "GameLogo": "diamond.png",
+  "GameLogo": "jsons/game6.png",
   "MinBet": 10.0,
   "MaxBet": 1000.0,
   "RiskLevel": "high",

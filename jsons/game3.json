@@ -3,7 +3,7 @@
   "ProviderName": "NetEnt",
   "Stars": 4.5,
   "NoOfVotes": 210,
-  "GameLogo": "gold.png",
+  "GameLogo": "jsons/game3.png",
   "MinBet": 1.0,
   "MaxBet": 100.0,
   "RiskLevel": "medium",

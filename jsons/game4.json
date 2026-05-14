@@ -3,7 +3,7 @@
   "ProviderName": "PlayTech",
   "Stars": 4.9,
   "NoOfVotes": 500,
-  "GameLogo": "high.png",
+  "GameLogo": "jsons/game4.png",
   "MinBet": 5.0,
   "MaxBet": 500.0,
   "RiskLevel": "high",

@@ -3,7 +3,7 @@
   "ProviderName": "QuickGames",
   "Stars": 3.5,
   "NoOfVotes": 50,
-  "GameLogo": "coin.png",
+  "GameLogo": "jsons/game5.png",
   "MinBet": 0.1,
   "MaxBet": 5.0,
   "RiskLevel": "low",
