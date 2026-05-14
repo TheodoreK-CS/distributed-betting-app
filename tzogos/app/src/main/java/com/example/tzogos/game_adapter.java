@@ -2,9 +2,12 @@ package com.example.tzogos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,6 +45,16 @@ public class game_adapter extends RecyclerView.Adapter<game_adapter.myViewHolder
         holder.gameRisk.setText("Risk: " + model.getRisk());
         holder.gameBets.setText("Bet: " + model.getMinBet() + " - " + model.getMaxBet() + "  " + model.getBetCategory());
 
+        // --- NEW: Decode Image Bytes ---
+        byte[] imgBytes = model.getGame().getImageBytes();
+        if (imgBytes != null && imgBytes.length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+            holder.gameLogo.setImageBitmap(bitmap);
+        } else {
+            // Optional: If no image is provided, clear it or set a default placeholder
+            holder.gameLogo.setImageDrawable(null);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             Intent temp = new Intent(context, game_activity.class);
             temp.putExtra("game", model.getGame());
@@ -57,6 +70,7 @@ public class game_adapter extends RecyclerView.Adapter<game_adapter.myViewHolder
 
     public static class myViewHolder extends RecyclerView.ViewHolder {
         TextView gameName, gameRating, gameProvider, gameRisk, gameBets;
+        ImageView gameLogo; // --- NEW ---
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +79,7 @@ public class game_adapter extends RecyclerView.Adapter<game_adapter.myViewHolder
             gameProvider = itemView.findViewById(R.id.game_provider);
             gameRisk = itemView.findViewById(R.id.game_risk);
             gameBets = itemView.findViewById(R.id.game_bets);
+            gameLogo = itemView.findViewById(R.id.game_logo_img); // --- NEW ---
         }
     }
 }
