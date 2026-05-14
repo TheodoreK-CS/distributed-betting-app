@@ -97,7 +97,7 @@ public class browse_games_activity extends AppCompatActivity {
     }
 
     public void click_balance(View v) {
-        Intent temp = new Intent(this, mainActivity.class);
+        Intent temp = new Intent(this, balance_activity.class);
         temp.putExtra("player", player);
         startActivity(temp);
     }

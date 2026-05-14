@@ -5,6 +5,7 @@
         <activity android:name=".game_activity"/>
         <activity android:name=".filters_activity"/>
         <activity android:name=".browse_games_activity"/>
+        <activity android:name=".balance_activity"/>
         <activity android:name=".mainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
