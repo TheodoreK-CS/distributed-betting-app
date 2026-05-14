@@ -52,10 +52,10 @@ public class balance_activity extends AppCompatActivity {
                 Toast.makeText(this, "Amount must be positive.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // Add the balance to the player object
+            //add the balance to the player
             player.addBalance(amount);
-            tBalance.setText(""); // Clear the input field
-            updateBalanceText(); // Update the text on screen
+            tBalance.setText(""); //clear the input field
+            updateBalanceText(); //update the text on screen
             Toast.makeText(this, "Tokens added!", Toast.LENGTH_SHORT).show();
 
         } catch (NumberFormatException e) {
@@ -64,7 +64,7 @@ public class balance_activity extends AppCompatActivity {
     }
 
     public void click_back(View v) {
-        // Send the updated player (with new balance) back to the Browse screen
+        //send the updated player (with new balance) back to the Browse screen
         Intent temp = new Intent(this, browse_games_activity.class);
         temp.putExtra("player", player);
         temp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
