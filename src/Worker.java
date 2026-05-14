@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 
 
@@ -128,6 +131,16 @@ class Worker{
                 if (command == Message.action.add_game){
                     Game newGame = obj.get_game();
                     boolean added = false;
+
+                    try {
+                        String logoPath = newGame.getGameLogoPath();
+                        if (logoPath != null && !logoPath.isEmpty()) {
+                            byte[] fileContent = Files.readAllBytes(Paths.get(logoPath));
+                            newGame.setImageBytes(fileContent);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Worker: Could not load image from path: " + newGame.getGameLogoPath());
+                    }
 
                     synchronized (gameListLock) {
                         boolean exists = false;
