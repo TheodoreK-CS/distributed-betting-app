@@ -22,6 +22,8 @@ public class Game implements Serializable{
     private String HashKey;
     private String safetyNumber;
 
+    private byte[] imageBytes;
+
 
     public Game(String gameName, String providerName, double stars, int noOfVotes, String gameLogoPath, double minBet, double maxBet, String riskLevel, String safetyNumber){
         this.gameName = gameName;
@@ -177,4 +179,7 @@ public class Game implements Serializable{
     public double getProfit(){
         return profit;
     }
+
+    public byte[] getImageBytes() { return imageBytes; }
+    public void setImageBytes(byte[] imageBytes) { this.imageBytes = imageBytes; }
 }
