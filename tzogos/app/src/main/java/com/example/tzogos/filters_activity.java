@@ -102,7 +102,7 @@ public class filters_activity extends AppCompatActivity {
 
         for (int i = 0; i < menu.size(); i++) {
             MenuItem mi = menu.getItem(i);
-            String key = mi.getTitle().toString().toLowerCase(Locale.ROOT);
+            String key = mi.getTitle().toString();
             if (providers.contains(key)) {
                 SpannableString s = new SpannableString(mi.getTitle());
                 s.setSpan(new ForegroundColorSpan(green), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -111,8 +111,8 @@ public class filters_activity extends AppCompatActivity {
         }
 
         popupMenu.setOnMenuItemClickListener(item -> {
-            String key = item.getTitle().toString().toLowerCase(Locale.ROOT);
-            if (key.equals("all")) {
+            String key = item.getTitle().toString();
+            if (key.equalsIgnoreCase("all")) {
                 providers.clear();
                 providers.add("all");
             } else {
