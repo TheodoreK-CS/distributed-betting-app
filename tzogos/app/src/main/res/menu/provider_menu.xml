@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/provider_all" android:title="All" />
-    <item android:id="@+id/provider_pragmatic" android:title='"Microgaming"' />
-    <item android:id="@+id/provider_netent" android:title='"NetEnt"' />
-    <item android:id="@+id/provider_playngo" android:title='"PlayTech"' />
+    <item android:id="@+id/provider_pragmatic" android:title="Microgaming" />
+    <item android:id="@+id/provider_netent" android:title="NetEnt" />
+    <item android:id="@+id/provider_playngo" android:title="PlayTech" />
     <item android:id="@+id/provider_evolution" android:title="Evolution" />
     <item android:id="@+id/provider_yggdrasil" android:title="QuickGames" />
 </menu>
