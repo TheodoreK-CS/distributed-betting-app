@@ -9,13 +9,14 @@
     android:focusable="true"
     android:padding="12dp">
 
+
     <ImageView
         android:id="@+id/game_logo_img"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginEnd="12dp"
         android:scaleType="centerCrop"
-        android:background="@color/color_2"
+        android:background="@color/silver"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +51,7 @@
         android:id="@+id/game_provider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:layout_marginStart="12dp"
         android:text="Provider: provider"
         android:textColor="@color/black"

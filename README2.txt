@@ -34,3 +34,5 @@ jsons\game3.json
 jsons\game4.json
 jsons\game5.json
 jsons\game6.json
+
+cd D:\School\6o_ejamhno\katanemhmena\Ergasia\ErgasiaFolder

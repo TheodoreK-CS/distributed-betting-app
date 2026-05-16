@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/welcome_text"
@@ -15,7 +15,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="Welcome PLAYER"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:autoSizeMaxTextSize="30sp"
         app:autoSizeMinTextSize="12sp"
@@ -32,7 +32,7 @@
         android:maxLines="2"
         android:onClick="click_balance"
         android:text="Balance"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/filter_button"
         app:layout_constraintHorizontal_bias="0.11"

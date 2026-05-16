@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/provider_all" android:title="all" />
-    <item android:id="@+id/provider_pragmatic" android:title="pragmatic" />
-    <item android:id="@+id/provider_netent" android:title="netent" />
-    <item android:id="@+id/provider_playngo" android:title="playngo" />
-    <item android:id="@+id/provider_evolution" android:title="evolution" />
-    <item android:id="@+id/provider_yggdrasil" android:title="yggdrasil" />
+    <item android:id="@+id/provider_pragmatic" android:title="Pragmatic" />
+    <item android:id="@+id/provider_netent" android:title="NetEnt" />
+    <item android:id="@+id/provider_playngo" android:title="Playngo" />
+    <item android:id="@+id/provider_evolution" android:title="Evolution" />
+    <item android:id="@+id/provider_yggdrasil" android:title="Yggdrasil" />
 </menu>
