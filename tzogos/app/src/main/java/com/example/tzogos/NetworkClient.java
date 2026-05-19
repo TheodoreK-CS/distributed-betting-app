@@ -8,8 +8,8 @@ import MessageEssentials.Message;
 
 public class NetworkClient {
     // Android emulator -> host machine. Change to your computer LAN IP for a real phone.
-    public static String SERVER_IP = "10.0.2.2";
-    public static int SERVER_PORT = 8000;
+    public static String SERVER_IP = "192.168.1.6";
+    public static int SERVER_PORT = 6000;
 
     public static Message send(Message request) throws Exception {
         Socket socket = new Socket(SERVER_IP, SERVER_PORT);
